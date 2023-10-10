@@ -35,6 +35,10 @@
   margin-left: 250px;
 }
 
+.pageheader {
+  background: linear-gradient(to right, #dbf264, #FFC0CB 33.33%, white 33.33%, white 66.66%, #ed2939 66.66%),
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
