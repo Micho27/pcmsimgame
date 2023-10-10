@@ -1,4 +1,4 @@
-import { Modal,Button } from "@mui/material";
+import { Modal, Button } from "@mui/material";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -8,8 +8,8 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import React from "react"
 
-type Props ={
-    children:string;
+type Props = {
+    children: string;
 }
 const riderFunction = [{
     name: 'kenneth',
@@ -20,20 +20,21 @@ const riderFunction = [{
     raceDays: 420
 }];
 
-const RaceDaysModal = (props:Props) => {
-    const {children}=props;
+const RaceDaysModal = (props: Props) => {
+    const { children } = props;
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
-    return(
+    return (
         <div>
             <Button onClick={handleOpen}>{children}</Button>
-            <Modal 
-              open={open}
-              onClose={handleClose}
-              aria-labelledby="modal-modal-title"
-              aria-describedby="modal-modal-description">
+            <Modal
+                className="RiderModal"
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description">
                 <TableContainer component={Paper}>
                     <Table>
                         <TableHead>
