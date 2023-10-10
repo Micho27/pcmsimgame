@@ -10,10 +10,10 @@ const App = () => {
       <Header />
       <img src={logo} className="App-logo" alt="logo" />
       <p>
-          Welcome to the website for the PCM Sim game. Join our discord for more information. 
+        Welcome to the website for the PCM Sim game. Join our discord for more information.
       </p>
       <p>
-          PCM Sim game UCI Standings
+        PCM Sim game UCI Standings
       </p>
       <StandingsTable />
     </div>
