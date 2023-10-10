@@ -8,6 +8,9 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import React from "react"
 
+type Props ={
+    children:string;
+}
 const riderFunction = [{
     name: 'kenneth',
     raceDays: 69
@@ -17,14 +20,15 @@ const riderFunction = [{
     raceDays: 420
 }];
 
-const RaceDaysModal = () => {
+const RaceDaysModal = (props:Props) => {
+    const {children}=props;
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
     return(
         <div>
-            <Button onClick={handleOpen}>Bingoal</Button>
+            <Button onClick={handleOpen}>{children}</Button>
             <Modal 
               open={open}
               onClose={handleClose}

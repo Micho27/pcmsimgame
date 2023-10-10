@@ -11,14 +11,9 @@ const App = () => {
         <p>
           Welcome to the website for the PCM Sim game. Join our discord for more information. 
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          PCM SIm game
-        </a>
+        <p>
+          PCM SIm game UCI Standings
+        </p>
         <StandingsTable />
       </header>
     </div>
