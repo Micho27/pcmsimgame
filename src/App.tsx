@@ -7,17 +7,15 @@ import Header from "./components/header/Header";
 const App = () => {
   return (
     <div className="App">
-      <header className="App-header">
-        <Header />
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
+      <Header />
+      <img src={logo} className="App-logo" alt="logo" />
+      <p>
           Welcome to the website for the PCM Sim game. Join our discord for more information. 
-        </p>
-        <p>
-          PCM SIm game UCI Standings
-        </p>
-        <StandingsTable />
-      </header>
+      </p>
+      <p>
+          PCM Sim game UCI Standings
+      </p>
+      <StandingsTable />
     </div>
   );
 }
