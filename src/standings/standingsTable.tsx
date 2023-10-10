@@ -6,6 +6,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import RaceDaysModal from './RaceDaysModal';
 
 const StandingsTable = () => {
     return (
@@ -17,7 +18,7 @@ const StandingsTable = () => {
                 </TableHead>
                 <TableBody>
                     <TableRow>
-                        <TableCell>Bingoal</TableCell>
+                        <TableCell><RaceDaysModal/></TableCell>
                         <TableCell>3000000</TableCell>
                     </TableRow>
                     <TableRow>
