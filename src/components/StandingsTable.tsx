@@ -19,11 +19,16 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
   }));
   
-const uciStandingsData = [{team:'bingoal',points:30000,averageAge:24},{team:'jumbo',points:-100,averageAge:58}]
+const uciStandingsData = [{team:'bingoal',points:30000,averageAge:24},
+{team:'jumbo',points:-100,averageAge:58},
+{team:'ef education',points:30000,averageAge:24},
+{team:'ineos',points:-30,averageAge:58}
+];
+
 const StandingsTable = () => {
     return (
-        <TableContainer component={Paper}>
-            <Table className='standingsTable' aria-label="customized table">
+        <TableContainer className="standingsTableBack">
+            <Table component={Paper} className='standingsTable' aria-label="customized table">
                 <TableHead>
                     <TableCell>TEAMS</TableCell>
                     <TableCell>Score</TableCell>

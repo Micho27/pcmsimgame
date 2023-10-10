@@ -9,7 +9,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 
 const Header = () => {
     return (
-        <AppBar className='pageheader' sx={{marginTop:-3}} position="static">
+        <AppBar className='pageheader' position="static">
             <Toolbar>
                 <IconButton
                     size="large"
