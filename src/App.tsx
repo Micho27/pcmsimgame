@@ -1,7 +1,7 @@
 import React from "react"
 import logo from './logo.svg';
 import './App.css';
-import StandingsTable from './components/StandingsTable';
+import StandingsTable from './components/standings/StandingsTable';
 import Header from "./components/header/Header";
 
 const App = () => {
