@@ -3,34 +3,18 @@ import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import TableSortLabel from '@mui/material/TableSortLabel';
 import Paper from '@mui/material/Paper';
-import Box from '@mui/material/Box';
 import RaceDaysModal from '../RaceDaysModal';
+import StandingsHead from './StandingsHead';
 import { styled } from '@mui/material/styles';
-import { visuallyHidden } from '@mui/utils';
 
-interface Data {
+export interface Data {
     team: string;
     points: number;
 }
 
-interface HeadCell {
-    disablePadding: boolean;
-    id: keyof Data;
-    label: string;
-    numeric: boolean;
-}
-
-type Order = 'asc' | 'desc';
-
-interface EnhancedTableProps {
-    onRequestSort: (event: React.MouseEvent<unknown>, property: keyof Data) => void;
-    order: Order;
-    orderBy: string;
-}
+export type Order = 'asc' | 'desc';
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
@@ -42,62 +26,11 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-const headCells: readonly HeadCell[] = [
-    {
-        id: 'team',
-        numeric: false,
-        disablePadding: true,
-        label: 'TeamName',
-    },
-    {
-        id: 'points',
-        numeric: false,
-        disablePadding: true,
-        label: 'UCI Points',
-    }
-]
-
 const uciStandingsData = [{ team: 'bingoal', points: 30000 },
 { team: 'jumbo', points: -100 },
 { team: 'ef education', points: 30000 },
 { team: 'ineos', points: -30 }
 ];
-
-const EnhancedTableHead = (props: EnhancedTableProps) => {
-    const { order, orderBy, onRequestSort } = props;
-    const createSortHandler =
-        (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
-            onRequestSort(event, property);
-        };
-
-    return (
-        <TableHead>
-            <TableRow>
-                {headCells.map((headCell) => (
-                    <TableCell
-                        key={headCell.id}
-                        align={headCell.numeric ? 'right' : 'left'}
-                        padding={headCell.disablePadding ? 'none' : 'normal'}
-                        sortDirection={orderBy === headCell.id ? order : false}
-                    >
-                        <TableSortLabel
-                            active={orderBy === headCell.id}
-                            direction={orderBy === headCell.id ? order : 'asc'}
-                            onClick={createSortHandler(headCell.id)}
-                        >
-                            {headCell.label}
-                            {orderBy === headCell.id ? (
-                                <Box component="span" sx={visuallyHidden}>
-                                    {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                                </Box>
-                            ) : null}
-                        </TableSortLabel>
-                    </TableCell>
-                ))}
-            </TableRow>
-        </TableHead>
-    );
-}
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
     if (b[orderBy] < a[orderBy]) {
@@ -155,13 +88,13 @@ const StandingsTable = () => {
     return (
         <TableContainer className="standingsTableBack">
             <Table component={Paper} className='standingsTable' aria-label="customized table">
-                <EnhancedTableHead
+                <StandingsHead
                     order={order}
                     orderBy={orderBy}
                     onRequestSort={handleRequestSort}
                 />
                 <TableBody>
-                    {sortedStandings.map((row, index) => (
+                    {sortedStandings.map((row) => (
                         <StyledTableRow key={row.team} >
                             <TableCell>
                                 <RaceDaysModal>{row.team as string}</RaceDaysModal>
