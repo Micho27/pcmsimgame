@@ -4,7 +4,7 @@ import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
 import MenuIcon from '@mui/icons-material/Menu';
 import { IconButton } from '@mui/material';
-import UploadExcelButton from './UploadExcelButton';
+import RaceResultsModal from './RaceResultsModal';
 
 export default function TemporaryDrawer() {
     const [state, setState] = React.useState({ left: false });
@@ -30,7 +30,7 @@ export default function TemporaryDrawer() {
             onClick={toggleDrawer(anchor, false)}
             onKeyDown={toggleDrawer(anchor, false)}
         >
-            <UploadExcelButton />
+            <RaceResultsModal />
             <Divider />
         </Box>
     );
