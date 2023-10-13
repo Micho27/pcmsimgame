@@ -13,7 +13,7 @@ import { debug } from "console";
 
 
 export interface Data {
-    team: string;
+    teams: string;
     points: number;
 }
 
@@ -33,12 +33,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
         border: 0,
     },
 }));
-
-// const uciStandingsData = [{ team: 'bingoal', points: 30000 },
-// { team: 'jumbo', points: -100 },
-// { team: 'ef education', points: 30000 },
-// { team: 'ineos', points: -30 }
-// ];
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
     if (b[orderBy] < a[orderBy]) {
@@ -88,7 +82,7 @@ const StandingsTable = () => {
 
         setuciStandingsData([...res])
         setLoading(false)
-    }
+    };
 
     useEffect(() => {
         fetchData()
@@ -103,13 +97,11 @@ const StandingsTable = () => {
         setOrderBy(property);
     };
 
-    //sorting function broke during upgrade to using database. Look into another time
-    
-    // const sortedStandings = React.useMemo(
-    //     () => stableSort(uciStandingsData, getComparator(order, orderBy)),
-    //     [order, orderBy],
-    // );
-    //debugger;
+    const sortedStandings = React.useMemo(
+        () => stableSort(uciStandingsData, getComparator(order, orderBy)),
+        [order, orderBy],
+    );
+
     return (
         <TableContainer className="standingsTableBack">
             <Table component={Paper} className='standingsTable' aria-label="customized table">
@@ -119,7 +111,7 @@ const StandingsTable = () => {
                     onRequestSort={handleRequestSort}
                 />
                 <TableBody>
-                    {uciStandingsData.map((row) => (
+                    {sortedStandings.map((row) => (
                         <StyledTableRow key={row.teams} >
                             <TableCell>
                                 <RaceDaysModal>{row.teams}</RaceDaysModal>
