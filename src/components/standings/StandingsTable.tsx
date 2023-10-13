@@ -1,13 +1,16 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { styled } from '@mui/material/styles';
 import RaceDaysModal from '../RaceDaysModal';
 import StandingsHead from './StandingsHead';
-import { styled } from '@mui/material/styles';
+import { getUCIStandings } from '../../services/dbActions';
+import { debug } from "console";
+
 
 export interface Data {
     team: string;
@@ -15,6 +18,11 @@ export interface Data {
 }
 
 export type Order = 'asc' | 'desc';
+
+type uciStandings = {
+    teams: string,
+    points: number;
+}
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
@@ -26,11 +34,11 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-const uciStandingsData = [{ team: 'bingoal', points: 30000 },
-{ team: 'jumbo', points: -100 },
-{ team: 'ef education', points: 30000 },
-{ team: 'ineos', points: -30 }
-];
+// const uciStandingsData = [{ team: 'bingoal', points: 30000 },
+// { team: 'jumbo', points: -100 },
+// { team: 'ef education', points: 30000 },
+// { team: 'ineos', points: -30 }
+// ];
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
     if (b[orderBy] < a[orderBy]) {
@@ -67,8 +75,24 @@ function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) 
 }
 
 const StandingsTable = () => {
-    const [order, setOrder] = React.useState<Order>('asc');
-    const [orderBy, setOrderBy] = React.useState<keyof Data>('points');
+    const [order, setOrder] = useState<Order>('asc');
+    const [orderBy, setOrderBy] = useState<keyof Data>('points');
+    const [loading, setLoading] = useState(false);
+    const [uciStandingsData, setuciStandingsData] = useState<Array<uciStandings>>([]);
+
+    //function fetches uci data from database
+    const fetchData = async () => {
+        setLoading(true)
+
+        const res: Array<uciStandings> = await getUCIStandings()
+
+        setuciStandingsData([...res])
+        setLoading(false)
+    }
+
+    useEffect(() => {
+        fetchData()
+    }, [])
 
     const handleRequestSort = (
         event: React.MouseEvent<unknown>,
@@ -79,12 +103,13 @@ const StandingsTable = () => {
         setOrderBy(property);
     };
 
-    const sortedStandings = React.useMemo(
-        () =>
-            stableSort(uciStandingsData, getComparator(order, orderBy)),
-        [order, orderBy],
-    );
-
+    //sorting function broke during upgrade to using database. Look into another time
+    
+    // const sortedStandings = React.useMemo(
+    //     () => stableSort(uciStandingsData, getComparator(order, orderBy)),
+    //     [order, orderBy],
+    // );
+    //debugger;
     return (
         <TableContainer className="standingsTableBack">
             <Table component={Paper} className='standingsTable' aria-label="customized table">
@@ -94,10 +119,10 @@ const StandingsTable = () => {
                     onRequestSort={handleRequestSort}
                 />
                 <TableBody>
-                    {sortedStandings.map((row) => (
-                        <StyledTableRow key={row.team} >
+                    {uciStandingsData.map((row) => (
+                        <StyledTableRow key={row.teams} >
                             <TableCell>
-                                <RaceDaysModal>{row.team as string}</RaceDaysModal>
+                                <RaceDaysModal>{row.teams}</RaceDaysModal>
                             </TableCell>
                             <TableCell>{row.points}</TableCell>
                         </StyledTableRow>
