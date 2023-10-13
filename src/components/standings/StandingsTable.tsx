@@ -69,7 +69,7 @@ function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) 
 }
 
 const StandingsTable = () => {
-    const [order, setOrder] = useState<Order>('asc');
+    const [order, setOrder] = useState<Order>('desc');
     const [orderBy, setOrderBy] = useState<keyof Data>('points');
     const [loading, setLoading] = useState(false);
     const [uciStandingsData, setuciStandingsData] = useState<Array<uciStandings>>([]);
@@ -99,7 +99,7 @@ const StandingsTable = () => {
 
     const sortedStandings = React.useMemo(
         () => stableSort(uciStandingsData, getComparator(order, orderBy)),
-        [order, orderBy],
+        [order, orderBy, loading],
     );
 
     return (
