@@ -21,7 +21,7 @@ const VisuallyHiddenInput = styled('input')({
     width: 1,
 });
 
-const UploadExcelButton = () => {
+const UploadExcelModalButton = () => {
     const [csvData, setCsvData] = useState<cvsItem[]>([]);
     const [filename, setFilename] = useState("");
 
@@ -54,10 +54,10 @@ const UploadExcelButton = () => {
 
     return (
         <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
-            Upload file
+            Upload Race Results
             <VisuallyHiddenInput type="file" accept=".xlsm" onChange={handleFileUpload} />
         </Button>
     );
 }
 
-export default UploadExcelButton;
+export default UploadExcelModalButton;

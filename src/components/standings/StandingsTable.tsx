@@ -103,7 +103,7 @@ const StandingsTable = () => {
     );
 
     return (
-        <TableContainer className="standingsTableBack">
+        <TableContainer sx={{ marginTop: 5 }} className="standingsTableBack">
             <Table component={Paper} className='standingsTable' aria-label="customized table">
                 <StandingsHead
                     order={order}
