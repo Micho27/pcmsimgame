@@ -4,7 +4,11 @@ import Typography from '@mui/material/Typography';
 import Login from './Login';
 import Drawer from '../raceResultsHandler/Drawer';
 
-const Header = () => {
+type Props = {
+    token: any
+}
+const Header = (props: Props) => {
+    const { token } = props;
     return (
         <AppBar className='pageheader' position="static">
             <Toolbar>
