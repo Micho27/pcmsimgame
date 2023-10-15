@@ -53,6 +53,7 @@ const RaceResultsModal = () => {
         if (!e.target.files) {
             return;
         }
+
         const file = e.target.files[0];
         const { name } = file;
         setFilename(name);
