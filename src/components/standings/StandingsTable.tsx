@@ -101,7 +101,7 @@ const StandingsTable = () => {
         () => stableSort(uciStandingsData, getComparator(order, orderBy)),
         [order, orderBy, loading],
     );
-
+        
     return (
         <TableContainer sx={{ marginTop: 5 }} className="standingsTableBack">
             <Table component={Paper} className='standingsTable' aria-label="customized table">
