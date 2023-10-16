@@ -1,5 +1,5 @@
 import { Modal, Button, Divider } from "@mui/material";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useState, useEffect } from "react";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { styled } from '@mui/material/styles';
 import Radio from '@mui/material/Radio';
@@ -8,14 +8,20 @@ import Box from '@mui/material/Box';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
+import { getTeamUciStanding } from '../../services/dbActions';
 import * as XLSX from "xlsx";
 
 type RaceResults = {
     id: string;
     Rank: number;
     Team: String;
-    Name:String;
+    Name: String;
 };
+
+type uciStandings = {
+    teams: string,
+    points: number;
+}
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -41,61 +47,70 @@ const style = {
     p: 4,
 };
 
+const readExcel = async (file: any, setRaceResults: Function) => {
+    const promise = new Promise((resolve, reject) => {
+        const fileReader = new FileReader();
+        fileReader.readAsArrayBuffer(file);
+
+        fileReader.onload = (e: any) => {
+            const bufferArray = e.target.result;
+
+            const wb = XLSX.read(bufferArray, { type: "buffer" });
+
+            const wsname = wb.SheetNames[0];
+
+            const ws = wb.Sheets[wsname];
+
+            const data = XLSX.utils.sheet_to_json(ws);
+            resolve(data);
+        };
+
+        fileReader.onerror = (error) => {
+            reject(error);
+        };
+    });
+
+    promise.then((d: any) => {
+        setRaceResults(d);
+    });
+}
+
+const getTeam = async (teamName: string) => {
+    const team = await getTeamUciStanding(teamName);
+
+    return team;
+};
+
 const RaceResultsModal = () => {
     const [open, setOpen] = useState(false);
     const [raceResults, setRaceResults] = useState<RaceResults[]>([]);
     const [level, setLevel] = useState("");
     const [raceType, setRaceType] = useState("");
 
-
     const toggleOpenClose = () => setOpen(!open);
-
-    const readExcel = async (file: any) => {
-        const promise = new Promise((resolve, reject) => {
-            const fileReader = new FileReader();
-            fileReader.readAsArrayBuffer(file);
-      
-            fileReader.onload = (e:any) => {
-              const bufferArray = e.target.result;
-      
-              const wb = XLSX.read(bufferArray, { type: "buffer" });
-      
-              const wsname = wb.SheetNames[0];
-      
-              const ws = wb.Sheets[wsname];
-      
-              const data = XLSX.utils.sheet_to_json(ws);
-              resolve(data);
-            };
-      
-            fileReader.onerror = (error) => {
-              reject(error);
-            };
-          });
-      
-          promise.then((d:any) => {
-            setRaceResults(d);
-          });
-    }
 
     //this function needs to be edited to send data to database.
     //in future maybe push this to backend but for now this will be fine
-    const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
+    const handleFileUpload = async (e: ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files) {
             return;
         }
 
         const file = e.target.files[0];
-        const data=readExcel(file);
+        const data = readExcel(file, setRaceResults);
 
         console.log(data);
         console.log(raceResults);
-        raceResults.forEach((result:RaceResults)=>{
-            if(result.Rank<15) {
-                //add points
-            }
-            //add race day
-        })
+        const TeamStandings =
+            raceResults.forEach((result: RaceResults) => {
+                if (result.Rank < 15) {
+                    //add points calculations
+                    //const team: uciStandings = getTeam("Bingoal");
+ 
+                    // team.points += 10;
+                }
+                //add race day to each rider
+            })
     };
 
     const handleLevelChange = (event: React.ChangeEvent<HTMLInputElement>) => {
