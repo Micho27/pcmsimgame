@@ -9,7 +9,6 @@ import { styled } from '@mui/material/styles';
 import RaceDaysModal from '../RaceDaysModal';
 import StandingsHead from './StandingsHead';
 import { getUCIStandings } from '../../services/dbActions';
-import { debug } from "console";
 
 
 export interface Data {
@@ -75,7 +74,7 @@ const StandingsTable = () => {
     const [uciStandingsData, setuciStandingsData] = useState<Array<uciStandings>>([]);
 
     //function fetches uci data from database
-    const fetchData = async () => {
+    const fetchTeamStandings = async () => {
         setLoading(true)
 
         const res: Array<uciStandings> = await getUCIStandings()
@@ -85,7 +84,7 @@ const StandingsTable = () => {
     };
 
     useEffect(() => {
-        fetchData()
+        fetchTeamStandings()
     }, [])
 
     const handleRequestSort = (

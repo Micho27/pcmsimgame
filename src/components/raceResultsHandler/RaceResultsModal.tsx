@@ -1,5 +1,5 @@
 import { Modal, Button, Divider } from "@mui/material";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useState, useEffect } from "react";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { styled } from '@mui/material/styles';
 import Radio from '@mui/material/Radio';
@@ -8,11 +8,20 @@ import Box from '@mui/material/Box';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
+import { getTeamUciStanding } from '../../services/dbActions';
+import * as XLSX from "xlsx";
 
-type cvsItem = {
+type RaceResults = {
     id: string;
-    value: string;
+    Rank: number;
+    Team: String;
+    Name: String;
 };
+
+type uciStandings = {
+    teams: string,
+    points: number;
+}
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -38,45 +47,75 @@ const style = {
     p: 4,
 };
 
+const readExcel = async (file: any, setRaceResults: Function) => {
+    const promise = new Promise((resolve, reject) => {
+        const fileReader = new FileReader();
+        fileReader.readAsArrayBuffer(file);
+
+        fileReader.onload = (e: any) => {
+            const bufferArray = e.target.result;
+
+            const wb = XLSX.read(bufferArray, { type: "buffer" });
+
+            const wsname = wb.SheetNames[0];
+
+            const ws = wb.Sheets[wsname];
+
+            const data = XLSX.utils.sheet_to_json(ws);
+            resolve(data);
+        };
+
+        fileReader.onerror = (error) => {
+            reject(error);
+        };
+    });
+
+    promise.then((d: any) => {
+        setRaceResults(d);
+    });
+}
+
+const getTeam = async (teamName: string) => {
+    const team = await getTeamUciStanding(teamName);
+
+    return team;
+};
+
 const RaceResultsModal = () => {
     const [open, setOpen] = useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
-    const [csvData, setCsvData] = useState<cvsItem[]>([]);
-    const [filename, setFilename] = useState("");
+    const [raceResults, setRaceResults] = useState<RaceResults[]>([]);
     const [level, setLevel] = useState("");
     const [raceType, setRaceType] = useState("");
 
+    const toggleOpenClose = () => setOpen(!open);
+
     //this function needs to be edited to send data to database.
     //in future maybe push this to backend but for now this will be fine
-    const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
+    const handleFileUpload = async (e: ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files) {
             return;
         }
 
         const file = e.target.files[0];
-        const { name } = file;
-        setFilename(name);
+        const data = readExcel(file, setRaceResults);
 
-        const reader = new FileReader();
-        reader.onload = (evt) => {
-            if (!evt?.target?.result) {
-                return;
-            }
-            const { result } = evt.target;
-            // const records = parse(result as string, {
-            //     columns: ["id", "value"],
-            //     delimiter: ";",
-            //     trim: true,
-            //     skip_empty_lines: true
-            // });
-            setCsvData([]);
-        };
-        reader.readAsBinaryString(file);
+        console.log(data);
+        console.log(raceResults);
+        const TeamStandings =
+            raceResults.forEach((result: RaceResults) => {
+                if (result.Rank < 15) {
+                    //add points calculations
+                    //const team: uciStandings = getTeam("Bingoal");
+ 
+                    // team.points += 10;
+                }
+                //add race day to each rider
+            })
     };
 
     const handleLevelChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setLevel((event.target as HTMLInputElement).value);
+        setRaceType("");
     };
     const handleRaceTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setRaceType((event.target as HTMLInputElement).value);
@@ -84,11 +123,11 @@ const RaceResultsModal = () => {
 
     return (
         <div>
-            <Button component="label" variant="contained" startIcon={<CloudUploadIcon />} onClick={handleOpen}>Upload Race Results</Button>
+            <Button component="label" variant="contained" startIcon={<CloudUploadIcon />} onClick={toggleOpenClose}>Upload Race Results</Button>
 
             <Modal
                 open={open}
-                onClose={handleClose}
+                onClose={toggleOpenClose}
                 sx={{ zIndex: 100 }}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description">
@@ -96,7 +135,7 @@ const RaceResultsModal = () => {
                     <FormControl>
                         <FormLabel id="raceLevelForm">Race Level</FormLabel>
                         <RadioGroup
-                            defaultValue="wt"
+                            defaultValue=""
                             name="radio-buttons-group"
                             onChange={handleLevelChange}
                         >
@@ -109,7 +148,7 @@ const RaceResultsModal = () => {
                     <FormControl>
                         <FormLabel id="raceLevelForm">Race Type</FormLabel>
                         {level === 'wt' ?
-                            (<RadioGroup>
+                            (<RadioGroup onChange={handleRaceTypeChange}>
                                 <FormControlLabel value="gvs" control={<Radio />} label="Giro/vuelta stage" />
                                 <FormControlLabel value="gvgc" control={<Radio />} label="Giro/Vuelta GC" />
                                 <FormControlLabel value="tdfs" control={<Radio />} label="Tour de France Stage" />
@@ -120,23 +159,26 @@ const RaceResultsModal = () => {
                                 <FormControlLabel value="odr" control={<Radio />} label="one day" />
                             </RadioGroup>) :
                             level === 'pt' ?
-                                (<RadioGroup>
+                                (<RadioGroup onChange={handleRaceTypeChange}>
                                     <FormControlLabel value="pts" control={<Radio />} label="pro tour stage" />
                                     <FormControlLabel value="ptgc" control={<Radio />} label="pro tour gc" />
                                     <FormControlLabel value="ptodr" control={<Radio />} label="pro tour one day" />
                                 </RadioGroup>) :
                                 level === 'ct' ?
-                                    (<RadioGroup>
-                                        <FormControlLabel value="cs" control={<Radio />} label="conti stage" />
-                                        <FormControlLabel value="cgc" control={<Radio />} label="conti gc" />
-                                        <FormControlLabel value="codr" control={<Radio />} label="conti one day" />
+                                    (<RadioGroup onChange={handleRaceTypeChange}>
+                                        <FormControlLabel value="cts" control={<Radio />} label="conti stage" />
+                                        <FormControlLabel value="ctgc" control={<Radio />} label="conti gc" />
+                                        <FormControlLabel value="ctodr" control={<Radio />} label="conti one day" />
+                                        <FormControlLabel value="ctsO" control={<Radio />} label="conti stage" />
+                                        <FormControlLabel value="ctgcO" control={<Radio />} label="conti gc" />
+                                        <FormControlLabel value="ctodrO" control={<Radio />} label="conti one day" />
                                     </RadioGroup>) : null
                         }
                     </FormControl>
                     <Divider />
-                    <Button sx={{ marginTop: 5 }} component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+                    <Button disabled={level === "" || raceType === ""} sx={{ marginTop: 5 }} component="label" variant="contained" startIcon={<CloudUploadIcon />}>
                         Choose Excel File
-                        <VisuallyHiddenInput type="file" accept=".xlsm" onChange={handleFileUpload} />
+                        <VisuallyHiddenInput type="file" onChange={handleFileUpload} />
                     </Button>
                 </Box>
             </Modal>
