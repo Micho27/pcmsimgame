@@ -3,6 +3,8 @@ import Box from '@mui/material/Box';
 import React, { useEffect, useState } from "react"
 import { getLogin } from '../../services/dbActions';
 
+type Login = { username: string, password: string };
+
 const style = {
     position: 'absolute' as 'absolute',
     top: '50%',
@@ -15,11 +17,9 @@ const style = {
     p: 4,
 };
 
-const loginUser = async (credentials: { username: string, password: string }) => {
-    const logins=await getLogin();
+const loginUser = async (credentials: Login,logins:Array<Login>) => {
     let authorize=false;
-
-    logins.array.forEach(login => {
+    logins.forEach((login:Login) => {
         if(login.username===credentials.username && login.password === credentials.password) {
             authorize=true;
         }
@@ -34,28 +34,31 @@ type Props = {
 
 const Login = (props: Props) => {
     const { setToken } = props;
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
+    const [logins,setLogins]= useState<Array<Login>>([]);
     const [username, setUserName] = useState("");
     const [password, setPassword] = useState("");
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
-    //function fetches uci data from database
+    //function fetches login data from database
     const fetchData = async () => {
-        return await getLogin()
+         const res: Array<Login> = await getLogin()
+
+         setLogins([...res])
     };
 
     useEffect(() => {
         fetchData()
     }, [])
 
-    const handleSubmit = async e => {
+    const handleSubmit = async (e:any) => {
         e.preventDefault();
         const token = await loginUser({
             username,
             password
-        }) ? 'Authorized': undefined;
+        },logins) ? 'Authorized': undefined;
 
         setToken(token);
     }

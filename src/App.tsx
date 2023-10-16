@@ -8,10 +8,10 @@ import RaceResultsModal from './components/raceResultsHandler/RaceResultsModal';
 const App = () => {
   const [token, setToken] = useState("");
 
-  
+
   return (
     <div className="App">
-      <Header token={token}/>
+      <Header token={token} setToken={setToken} />
       <img src={logo} className="App-logo" alt="logo" />
       <p>
         Welcome to the website for the PCM Sim game. Join our discord for more information.
