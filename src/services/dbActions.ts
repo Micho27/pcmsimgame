@@ -1,4 +1,4 @@
-import { getDocs, collection } from "firebase/firestore"; 
+import { getDocs, collection,setDoc,doc } from "firebase/firestore"; 
 import { getDb } from "./db"
 
 const simGameCollection = "sim-game"
@@ -33,4 +33,9 @@ export const getLogin = async () => {
     })
 
     return res;
+}
+
+export const updateStandings = (args:any) => {
+    const {id, ...params} = args 
+    return setDoc(doc(getDb(), simGameCollection, id), params)
 }
