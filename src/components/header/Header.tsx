@@ -5,10 +5,13 @@ import Login from './Login';
 import Drawer from '../raceResultsHandler/Drawer';
 
 type Props = {
+    setToken: Function;
     token: any
 }
+
 const Header = (props: Props) => {
-    const { token } = props;
+    const { token,setToken } = props;
+    
     return (
         <AppBar className='pageheader' position="static">
             <Toolbar>
@@ -16,7 +19,7 @@ const Header = (props: Props) => {
                 <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                     PCM Sim Game
                 </Typography>
-                <Login />
+                <Login setToken={setToken} />
             </Toolbar>
         </AppBar>
     )
