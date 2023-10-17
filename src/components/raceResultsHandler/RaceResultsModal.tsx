@@ -123,18 +123,15 @@ const RaceResultsModal = () => {
             raceResults.forEach((result: RaceResults) => {
                 if (result.Rank < 15) {
                     //add points calculations
-                    const { scoringTeam, index } = getTeam("Efapel Cycling", uciStandingsData);
+                    const { scoringTeam,index } = getTeam("Efapel Cycling", uciStandingsData);
                     
                     if (scoringTeam) {
-                        uciStandingsData[index] = {
-                            id: scoringTeam.id,
-                            teams: scoringTeam.teams,
-                            points: scoringTeam.points + 10,
-                        }
-                        setuciStandingsData(uciStandingsData);
+                        scoringTeam.points+=10;
+                        //edit that entry in db
                     } else {
                         console.log("could not find: Efapel Cycling")
                     }
+                    return scoringTeam;
                 }
                 //add race day to each rider
             })
