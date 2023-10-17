@@ -8,8 +8,9 @@ import Box from '@mui/material/Box';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
-import { getTeamUciStanding } from '../../services/dbActions';
+import { getUCIStandings } from '../../services/dbActions';
 import * as XLSX from "xlsx";
+import { uciStandings } from '../../commonTypes';
 
 type RaceResults = {
     id: string;
@@ -17,11 +18,6 @@ type RaceResults = {
     Team: String;
     Name: String;
 };
-
-type uciStandings = {
-    teams: string,
-    points: number;
-}
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -75,10 +71,18 @@ const readExcel = async (file: any, setRaceResults: Function) => {
     });
 }
 
-const getTeam = async (teamName: string) => {
-    const team = await getTeamUciStanding(teamName);
+const getTeam = (teamName: string, uciStandingsData: Array<uciStandings>) => {
+    let scoringTeam: uciStandings | undefined;
+    let index = -1;
 
-    return team;
+    uciStandingsData.forEach((team: uciStandings, idx) => {
+        if (team.teams === teamName) {
+            scoringTeam = team;
+            index = idx;
+        }
+    });
+
+    return { scoringTeam, index };
 };
 
 const RaceResultsModal = () => {
@@ -86,8 +90,21 @@ const RaceResultsModal = () => {
     const [raceResults, setRaceResults] = useState<RaceResults[]>([]);
     const [level, setLevel] = useState("");
     const [raceType, setRaceType] = useState("");
+    const [uciStandingsData, setuciStandingsData] = useState<Array<uciStandings>>([]);
 
     const toggleOpenClose = () => setOpen(!open);
+
+    //function fetches uci data from database
+    const fetchTeamStandings = async () => {
+
+        const res: Array<uciStandings> = await getUCIStandings()
+
+        setuciStandingsData([...res])
+    };
+
+    useEffect(() => {
+        fetchTeamStandings()
+    }, [])
 
     //this function needs to be edited to send data to database.
     //in future maybe push this to backend but for now this will be fine
@@ -98,16 +115,26 @@ const RaceResultsModal = () => {
 
         const file = e.target.files[0];
         const data = readExcel(file, setRaceResults);
-
+        debugger;
         console.log(data);
         console.log(raceResults);
+
         const TeamStandings =
             raceResults.forEach((result: RaceResults) => {
                 if (result.Rank < 15) {
                     //add points calculations
-                    //const team: uciStandings = getTeam("Bingoal");
- 
-                    // team.points += 10;
+                    const { scoringTeam, index } = getTeam("Efapel Cycling", uciStandingsData);
+                    
+                    if (scoringTeam) {
+                        uciStandingsData[index] = {
+                            id: scoringTeam.id,
+                            teams: scoringTeam.teams,
+                            points: scoringTeam.points + 10,
+                        }
+                        setuciStandingsData(uciStandingsData);
+                    } else {
+                        console.log("could not find: Efapel Cycling")
+                    }
                 }
                 //add race day to each rider
             })
