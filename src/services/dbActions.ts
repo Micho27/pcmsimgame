@@ -20,6 +20,23 @@ export const getRiderStandings = async () => {
     return doc.sheetsById[riderStandingsGid].getRows({ offset: 2 });
 };
 
+export const getRaceMetaData = async (raceName:string) => {
+    const doc=await getDbStandings()
+
+    const race=doc.sheetsByTitle[raceName];
+    await race.loadCells('A4:A11');
+
+    const raceType=race.getCellByA1('A5').value;
+    const raceLevel=race.getCellByA1('A8').value;
+    const stages=race.getCellByA1('A11').value;
+
+    return {
+        raceType,
+        raceLevel,
+        stages,
+    }
+}
+
 export const getNationStandings = async () => {
     const doc=await getDbStandings();
     return doc.sheetsById[nationStandingsGid].getRows();
@@ -27,7 +44,7 @@ export const getNationStandings = async () => {
 
 export const getRaceDays = async (level:string) => {
     const doc= await getDbDays();
-    console.log(doc.sheetsById[wtRaceDaysGid]);
+    
     let days=doc.sheetsById[wtRaceDaysGid];
 
     switch(level) {
