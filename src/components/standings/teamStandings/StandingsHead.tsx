@@ -5,7 +5,7 @@ import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import Box from '@mui/material/Box';
 import { visuallyHidden } from '@mui/utils';
-import { UciStandingsHeader } from './UciStandingsTable';
+import { UciStandingsHeader } from './TeamStandingsTable';
 import { Order } from "../../../commonTypes";
 
 interface HeadCell {
@@ -17,10 +17,10 @@ interface HeadCell {
 
 const headCells: readonly HeadCell[] = [
     {
-        id:'position',
+        id:'teamRank',
         numeric: false,
         disablePadding:false,
-        label:"Position"
+        label:"Rank"
     },
     {
         id: 'teamName',
