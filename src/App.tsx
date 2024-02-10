@@ -1,7 +1,7 @@
 import { useState } from "react"
 import logo from './PCM_SimGame_Picture.png';
 import './App.css';
-import StandingsTable from './components/standings/uciStandings/StandingsTable';
+import StandingsTable from './components/standings/uciStandings/UciStandingsTable';
 import RaceDaysLevelTabs from "./components/standings/raceDays/RaceDaysLevelTabs";
 import Header from "./components/header/Header";
 import { TabPanelProps } from "./commonTypes";
@@ -17,7 +17,7 @@ const  CustomTabPanel = (props: TabPanelProps) => {
     <div
       role="tabpanel"
       hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
+      id={`home-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >

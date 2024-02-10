@@ -9,3 +9,5 @@ export interface TabPanelProps {
     index: number;
     value: number;
 }
+
+export type Order = 'asc' | 'desc';

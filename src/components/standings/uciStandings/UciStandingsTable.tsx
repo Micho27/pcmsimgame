@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -9,19 +9,12 @@ import { styled } from '@mui/material/styles';
 import StandingsHead from './StandingsHead';
 import { getUCIStandings } from '../../../services/dbActions';
 import { GoogleSpreadsheetRow } from "google-spreadsheet";
+import { Order } from "../../../commonTypes";
 
-
-export interface Header {
+export interface UciStandingsHeader {
     position:number;
     teamName: string;
     teamPoints: number;
-}
-
-export type Order = 'asc' | 'desc';
-
-type uciStandings = {
-    teams: string,
-    points: number;
 }
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -40,9 +33,9 @@ const stableSort=(array: Array<GoogleSpreadsheetRow> , order:string, sortColumn:
     });
 };
 
-const StandingsTable = () => {
+const UciStandingsTable = () => {
     const [order, setOrder] = useState<Order>('desc');
-    const [orderBy, setOrderBy] = useState<keyof Header>('teamPoints');
+    const [orderBy, setOrderBy] = useState<keyof UciStandingsHeader>('teamPoints');
     const [loading, setLoading] = useState(false);
     const [uciStandingsData, setuciStandingsData] = useState<Array<GoogleSpreadsheetRow>>([]);
 
@@ -62,21 +55,21 @@ const StandingsTable = () => {
 
     const handleRequestSort = (
         event: React.MouseEvent<unknown>,
-        property: keyof Header,
+        property: keyof UciStandingsHeader,
     ) => {
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc');
         setOrderBy(property);
     };
 
-    const sortedStandings = React.useMemo(
+    const sortedStandings = useMemo(
         () => stableSort(uciStandingsData, order, orderBy),
         [order, orderBy, loading],
     );
         
     return (
-        <TableContainer className="standingsTableBack">
-            <Table component={Paper} className='standingsTable' aria-label="customized table">
+        <TableContainer className="UcistandingsTableBack">
+            <Table component={Paper} className='UcistandingsTable' aria-label="customized table">
                 <StandingsHead
                     order={order}
                     orderBy={orderBy}
@@ -95,4 +88,4 @@ const StandingsTable = () => {
     )
 };
 
-export default StandingsTable;
+export default UciStandingsTable;
