@@ -7,12 +7,12 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import StandingsHead from './StandingsHead';
-import { getUCIStandings } from '../../../services/dbActions';
+import { getTeamStanding } from '../../../services/dbActions';
 import { GoogleSpreadsheetRow } from "google-spreadsheet";
 import { Order } from "../../../commonTypes";
 
 export interface UciStandingsHeader {
-    position:number;
+    teamRank:number;
     teamName: string;
     teamPoints: number;
 }
@@ -33,7 +33,7 @@ const stableSort=(array: Array<GoogleSpreadsheetRow> , order:string, sortColumn:
     });
 };
 
-const UciStandingsTable = () => {
+const TeamStandingsTable = () => {
     const [order, setOrder] = useState<Order>('desc');
     const [orderBy, setOrderBy] = useState<keyof UciStandingsHeader>('teamPoints');
     const [loading, setLoading] = useState(false);
@@ -43,7 +43,7 @@ const UciStandingsTable = () => {
     const fetchTeamStandings = async () => {
         setLoading(true)
 
-        const res: Array<GoogleSpreadsheetRow> = await getUCIStandings();
+        const res: Array<GoogleSpreadsheetRow> = await getTeamStanding();
 
         setuciStandingsData([...res])
         setLoading(false)
@@ -76,9 +76,9 @@ const UciStandingsTable = () => {
                     onRequestSort={handleRequestSort}
                 />
                 <TableBody>
-                    {sortedStandings.map((row,index) =>
+                    {sortedStandings.map((row) =>
                         (<StyledTableRow key={row.get('teamName')} >
-                            <TableCell>{index+1}</TableCell>
+                            <TableCell>{row.get('teamRank')}</TableCell>
                             <TableCell>{row.get('teamName')}</TableCell>
                             <TableCell>{row.get('teamPoints')}</TableCell>
                         </StyledTableRow>))}
@@ -88,4 +88,4 @@ const UciStandingsTable = () => {
     )
 };
 
-export default UciStandingsTable;
+export default TeamStandingsTable;

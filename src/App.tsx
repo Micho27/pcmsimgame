@@ -1,7 +1,7 @@
 import { useState } from "react"
 import logo from './PCM_SimGame_Picture.png';
 import './App.css';
-import StandingsTable from './components/standings/uciStandings/UciStandingsTable';
+import UciStandingsTabs from './components/standings/UciStandingsTabs';
 import RaceDaysLevelTabs from "./components/standings/raceDays/RaceDaysLevelTabs";
 import Header from "./components/header/Header";
 import { TabPanelProps } from "./commonTypes";
@@ -51,15 +51,15 @@ const App = () => {
               textColor="secondary"
               indicatorColor="secondary"
               aria-label="secondary tabs example">
-            <Tab label="UCI Team Standings" />
-            <Tab label="UCI Rider Standings" disabled/>
+            <Tab label="UCI Standings" />
             <Tab label="Rider race Days used" />
+            <Tab label="Query race results? maybe in future??!?" disabled />
           </Tabs>
         </Box>
         <CustomTabPanel value={value} index={0}>
-          <StandingsTable />
+          <UciStandingsTabs />
         </CustomTabPanel>
-        <CustomTabPanel value={value} index={2}>
+        <CustomTabPanel value={value} index={1}>
           <RaceDaysLevelTabs />
         </CustomTabPanel>
       </Box>

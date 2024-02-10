@@ -11,9 +11,16 @@ const serviceAccountAuth = new JWT({
   ],
 });
 
-export const getDb =async () => {
-    const doc = new GoogleSpreadsheet(process.env.REACT_APP_SHEETS_ID!, serviceAccountAuth);
-    await doc.loadInfo(); // loads document properties and worksheets
+export const getDbDays = async () => {
+    const doc = new GoogleSpreadsheet(process.env.REACT_APP_SHEETS_DAYS_ID!, serviceAccountAuth);
+    await doc.loadInfo();
 
     return doc;
+}
+
+export const getDbStandings = async () => {
+  const doc = new GoogleSpreadsheet(process.env.REACT_APP_SHEETS_STANDINGS_ID!, serviceAccountAuth);
+  await doc.loadInfo();
+
+  return doc;
 }

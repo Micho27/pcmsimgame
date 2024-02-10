@@ -7,7 +7,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import StandingsHead, { RiderStandingsHeader } from './StandingsHead';
-import { getUCIStandings } from '../../../services/dbActions';
+import { getRiderStandings } from '../../../services/dbActions';
 import { GoogleSpreadsheetRow } from "google-spreadsheet";
 import { Order } from "../../../commonTypes";
 
@@ -34,17 +34,17 @@ const RiderStandingsTable = () => {
     const [riderStandingsData, setriderStandingsData] = useState<Array<GoogleSpreadsheetRow>>([]);
 
     //function fetches uci data from google sheets file
-    const fetchTeamStandings = async () => {
+    const fetchRiderStandings = async () => {
         setLoading(true)
 
-        const res: Array<GoogleSpreadsheetRow> = await getUCIStandings();
+        const res: Array<GoogleSpreadsheetRow> = await getRiderStandings();
 
         setriderStandingsData([...res])
         setLoading(false)
     };
 
     useEffect(() => {
-        fetchTeamStandings()
+        fetchRiderStandings()
     }, [])
 
     const handleRequestSort = (
@@ -71,10 +71,11 @@ const RiderStandingsTable = () => {
                 />
                 <TableBody>
                     {sortedStandings.map((row,index) =>
-                        (<StyledTableRow key={row.get('teamName')} >
-                            <TableCell>{index+1}</TableCell>
-                            <TableCell>{row.get('teamName')}</TableCell>
-                            <TableCell>{row.get('teamPoints')}</TableCell>
+                        (<StyledTableRow key={row.get('riderName')} >
+                            <TableCell>{row.get('riderRank')}</TableCell>
+                            <TableCell>{row.get('riderName')}</TableCell>
+                            <TableCell>{row.get('riderTeam')}</TableCell>
+                            <TableCell>{row.get('riderPoints')}</TableCell>
                         </StyledTableRow>))}
                 </TableBody>
             </Table>

@@ -6,13 +6,9 @@ import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
-import { getRaceDays } from '../../../services/dbActions';
+import { getNationStandings } from '../../../services/dbActions';
 import { GoogleSpreadsheetRow } from "google-spreadsheet";
-import RaceDaysHead from "./RaceDaysHead";
-
-interface RaceDaysTableProps {
-    level:string;
-}
+import NationsHead from "./NationsHead";
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
@@ -24,36 +20,34 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-const RaceDaysTable = (props:RaceDaysTableProps) => {
-    const { level } = props;
+const NationStandingsTable = () => {
     const [loading, setLoading] = useState(false);
     const [raceDaysData, setraceDaysData] = useState<Array<GoogleSpreadsheetRow>>([]);
 
     //function fetches uci data from google sheets file
-    const fetchRiderRaceDays = async () => {
+    const fetchNationStandings = async () => {
         setLoading(true)
 
-        const res: Array<GoogleSpreadsheetRow> = await getRaceDays(level);
-        console.log(res);
+        const res: Array<GoogleSpreadsheetRow> = await getNationStandings();
+        
         setraceDaysData([...res])
         setLoading(false)
     };
 
     useEffect(() => {
-        fetchRiderRaceDays()
+        fetchNationStandings()
     }, [])
         
     return (
         <TableContainer className="standingsTableBack">
             <Table component={Paper} className='standingsTable' aria-label="customized table">
-                <RaceDaysHead
-                />
+                <NationsHead />
                 <TableBody>
-                    {raceDaysData.map((row,index) =>
-                        (<StyledTableRow key={row.get('riderName')} >
-                            <TableCell>{row.get('teamName')}</TableCell>
-                            <TableCell>{row.get('riderName')}</TableCell>
-                            <TableCell>{row.get('raceDays')}</TableCell>
+                    {raceDaysData.map((row) =>
+                        (<StyledTableRow key={row.get('nationName')} >
+                            <TableCell>{row.get('nationRank')}</TableCell>
+                            <TableCell>{row.get('nationName')}</TableCell>
+                            <TableCell>{row.get('nationPoints')}</TableCell>
                         </StyledTableRow>))}
                 </TableBody>
             </Table>
@@ -61,4 +55,4 @@ const RaceDaysTable = (props:RaceDaysTableProps) => {
     )
 };
 
-export default RaceDaysTable;
+export default NationStandingsTable;

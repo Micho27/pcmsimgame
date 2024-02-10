@@ -1,12 +1,14 @@
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from "@mui/material/Box";
-import RaceDaysTable from './RaceDaysTable';
+import TeamStandingsTable from './teamStandings/TeamStandingsTable';
 import { useState } from 'react';
 import Typography from '@mui/material/Typography';
-import { TabPanelProps } from '../../../commonTypes';
+import { TabPanelProps } from '../../commonTypes';
+import RiderStandingsTable from './riderStandings/RiderStandingsTable';
+import NationStandingsTable from './nationsStandings/NationStandingsTable';
 
-const  RaceDaysTabPanel = (props: TabPanelProps) => {
+const  StandingsTabPanel = (props: TabPanelProps) => {
     const { children, value, index, ...other } = props;
   
     return (
@@ -26,7 +28,7 @@ const  RaceDaysTabPanel = (props: TabPanelProps) => {
     );
   }
 
-const RaceDaysLevelTabs = () => {
+const UciStandingsTabs = () => {
     const [value, setValue] = useState(0);
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -41,22 +43,22 @@ const RaceDaysLevelTabs = () => {
                   textColor="secondary"
                   indicatorColor="secondary"
                   aria-label="secondary tabs example">
-                    <Tab label="World Tour" />
-                    <Tab label="Pro Tour"/>
-                    <Tab label="Continental Tour" />
+                    <Tab label="Team Standings" />
+                    <Tab label="Rider Standings"/>
+                    <Tab label="Nation Standings"/>
               </Tabs>
             </Box>
-            <RaceDaysTabPanel value={value} index={0}>
-                <RaceDaysTable level='wt'/>
-            </RaceDaysTabPanel>
-            <RaceDaysTabPanel value={value} index={1}>
-                <RaceDaysTable level='pt'/>
-            </RaceDaysTabPanel>
-            <RaceDaysTabPanel value={value} index={2}>
-                <RaceDaysTable level='ct'/>
-            </RaceDaysTabPanel>
+            <StandingsTabPanel value={value} index={0}>
+                <TeamStandingsTable />
+            </StandingsTabPanel>
+            <StandingsTabPanel value={value} index={1}>
+                <RiderStandingsTable />
+            </StandingsTabPanel>
+            <StandingsTabPanel value={value} index={2}>
+                <NationStandingsTable />
+            </StandingsTabPanel>
         </Box>
     )
 }
 
-export default RaceDaysLevelTabs;
+export default UciStandingsTabs;

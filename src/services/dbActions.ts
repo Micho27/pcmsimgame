@@ -1,22 +1,32 @@
-import { getDb } from "./db"
+import { getDbDays, getDbStandings } from "./db"
 
+//gid to grab race days
 const wtRaceDaysGid:number=+process.env.REACT_APP_SHEETS_GID_WT_RACE_DAYS!;
 const ptRaceDaysGid:number=+process.env.REACT_APP_SHEETS_GID_PT_RACE_DAYS!;
 const ctRaceDaysGid:number=+process.env.REACT_APP_SHEETS_GID_CT_RACE_DAYS!;
-const uciStandingsGid:number=+process.env.REACT_APP_SHEETS_GID_STANDINGS!;
 
-export const getUCIStandings = async () => {
-    const doc=await getDb();
-    return doc.sheetsById[uciStandingsGid].getRows();
+//gid to grab points standings
+const teamStandingsGid:number=+process.env.REACT_APP_SHEETS_GID_TEAM_STANDINGS!;
+const riderStandingsGid:number=+process.env.REACT_APP_SHEETS_GID_RIDER_STANDINGS!;
+const nationStandingsGid:number=+process.env.REACT_APP_SHEETS_GID_NATION_STANDINGS!;
+
+export const getTeamStanding = async () => {
+    const doc=await getDbStandings();
+    return doc.sheetsById[teamStandingsGid].getRows({ offset: 2 });
 }
 
-// export const getTeamUciStanding = async (teamName: string) => {
-//     const doc=await getDb();
-//     return doc.sheetsByIndex[process.env.REACT];
-// };
+export const getRiderStandings = async () => {
+    const doc=await getDbStandings();
+    return doc.sheetsById[riderStandingsGid].getRows({ offset: 2 });
+};
+
+export const getNationStandings = async () => {
+    const doc=await getDbStandings();
+    return doc.sheetsById[nationStandingsGid].getRows();
+};
 
 export const getRaceDays = async (level:string) => {
-    const doc= await getDb();
+    const doc= await getDbDays();
     console.log(doc.sheetsById[wtRaceDaysGid]);
     let days=doc.sheetsById[wtRaceDaysGid];
 
