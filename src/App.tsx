@@ -2,6 +2,7 @@ import { useState } from "react"
 import logo from './PCM_SimGame_Picture.png';
 import './App.css';
 import StandingsTable from './components/standings/uciStandings/StandingsTable';
+import RaceDaysLevelTabs from "./components/standings/raceDays/RaceDaysLevelTabs";
 import Header from "./components/header/Header";
 import { TabPanelProps } from "./commonTypes";
 import Tabs from '@mui/material/Tabs';
@@ -52,11 +53,14 @@ const App = () => {
               aria-label="secondary tabs example">
             <Tab label="UCI Team Standings" />
             <Tab label="UCI Rider Standings" disabled/>
-            <Tab label="Rider race Days used" disabled />
+            <Tab label="Rider race Days used" />
           </Tabs>
         </Box>
         <CustomTabPanel value={value} index={0}>
           <StandingsTable />
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={2}>
+          <RaceDaysLevelTabs />
         </CustomTabPanel>
       </Box>
     </div>
