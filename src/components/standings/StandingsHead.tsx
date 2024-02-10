@@ -16,13 +16,13 @@ interface HeadCell {
 
 const headCells: readonly HeadCell[] = [
     {
-        id: 'teams',
+        id: 'teamName',
         numeric: false,
         disablePadding: true,
         label: 'TeamName',
     },
     {
-        id: 'points',
+        id: 'teamPoints',
         numeric: false,
         disablePadding: true,
         label: 'UCI Points',

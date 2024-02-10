@@ -9,5 +9,5 @@ export type uciStandings = {
 //         'stage': [65, 40, 25, 15, 10, 7, 5, 3, 2, 1,],
 //         'gc-daily': [18, 9, 4, 2]
 //     },
-//     'gvgc':[],
+//     'gvgc': [],
 // };

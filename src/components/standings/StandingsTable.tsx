@@ -9,11 +9,12 @@ import { styled } from '@mui/material/styles';
 import RaceDaysModal from '../RaceDaysModal';
 import StandingsHead from './StandingsHead';
 import { getUCIStandings } from '../../services/dbActions';
+import { GoogleSpreadsheetRow } from "google-spreadsheet";
 
 
 export interface Data {
-    teams: string;
-    points: number;
+    teamName: string;
+    teamPoints: number;
 }
 
 export type Order = 'asc' | 'desc';
@@ -33,51 +34,23 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
-    if (b[orderBy] < a[orderBy]) {
-        return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-        return 1;
-    }
-    return 0;
-}
-
-function getComparator<Key extends keyof any>(
-    order: Order,
-    orderBy: Key,
-): (
-    a: { [key in Key]: number | string },
-    b: { [key in Key]: number | string },
-) => number {
-    return order === 'desc'
-        ? (a, b) => descendingComparator(a, b, orderBy)
-        : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) {
-    const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
-    stabilizedThis.sort((a, b) => {
-        const order = comparator(a[0], b[0]);
-        if (order !== 0) {
-            return order;
-        }
-        return a[1] - b[1];
+const stableSort=(array: Array<GoogleSpreadsheetRow> , order:string, sortColumn:string) => {
+    return array.sort((a:GoogleSpreadsheetRow,b) => {
+        return order === 'desc' ? b.get(sortColumn)-a.get(sortColumn):a.get(sortColumn)-b.get(sortColumn)
     });
-    return stabilizedThis.map((el) => el[0]);
-}
+};
 
 const StandingsTable = () => {
     const [order, setOrder] = useState<Order>('desc');
-    const [orderBy, setOrderBy] = useState<keyof Data>('points');
+    const [orderBy, setOrderBy] = useState<keyof Data>('teamPoints');
     const [loading, setLoading] = useState(false);
-    const [uciStandingsData, setuciStandingsData] = useState<Array<uciStandings>>([]);
+    const [uciStandingsData, setuciStandingsData] = useState<Array<GoogleSpreadsheetRow>>([]);
 
     //function fetches uci data from database
     const fetchTeamStandings = async () => {
         setLoading(true)
 
-        const res: Array<uciStandings> = await getUCIStandings()
+        const res: Array<GoogleSpreadsheetRow> = await getUCIStandings();
 
         setuciStandingsData([...res])
         setLoading(false)
@@ -97,7 +70,7 @@ const StandingsTable = () => {
     };
 
     const sortedStandings = React.useMemo(
-        () => stableSort(uciStandingsData, getComparator(order, orderBy)),
+        () => stableSort(uciStandingsData, order, orderBy),
         [order, orderBy, loading],
     );
         
@@ -110,14 +83,11 @@ const StandingsTable = () => {
                     onRequestSort={handleRequestSort}
                 />
                 <TableBody>
-                    {sortedStandings.map((row) => (
-                        <StyledTableRow key={row.teams} >
-                            <TableCell>
-                                <RaceDaysModal>{row.teams}</RaceDaysModal>
-                            </TableCell>
-                            <TableCell>{row.points}</TableCell>
-                        </StyledTableRow>
-                    ))}
+                    {sortedStandings.map((row) =>
+                        (<StyledTableRow key={row.get('teamName')} >
+                            <TableCell>{row.get('teamName')}</TableCell>
+                            <TableCell>{row.get('teamPoints')}</TableCell>
+                        </StyledTableRow>))}
                 </TableBody>
             </Table>
         </TableContainer>
