@@ -5,11 +5,12 @@ import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import Box from '@mui/material/Box';
 import { visuallyHidden } from '@mui/utils';
-import { Header,Order } from './StandingsTable';
+import { UciStandingsHeader } from './UciStandingsTable';
+import { Order } from "../../../commonTypes";
 
 interface HeadCell {
     disablePadding: boolean;
-    id: keyof Header;
+    id: keyof UciStandingsHeader;
     label: string;
     numeric: boolean;
 }
@@ -36,7 +37,7 @@ const headCells: readonly HeadCell[] = [
 ]
 
 interface EnhancedTableProps {
-    onRequestSort: (event: React.MouseEvent<unknown>, property: keyof Header) => void;
+    onRequestSort: (event: React.MouseEvent<unknown>, property: keyof UciStandingsHeader) => void;
     order: Order;
     orderBy: string;
 }
@@ -44,7 +45,7 @@ interface EnhancedTableProps {
 const StandingsHead = (props: EnhancedTableProps) => {
     const { order, orderBy, onRequestSort } = props;
     const createSortHandler =
-        (property: keyof Header) => (event: React.MouseEvent<unknown>) => {
+        (property: keyof UciStandingsHeader) => (event: React.MouseEvent<unknown>) => {
             onRequestSort(event, property);
         };
 

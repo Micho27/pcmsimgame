@@ -1,12 +1,16 @@
-import React from "react"
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import { Header } from './RaceDaysTable';
+
+interface RaceDaysHeader {
+    riderName: string;
+    teamName: string;
+    raceDays: number;
+}
 
 interface HeadCell {
     disablePadding: boolean;
-    id: keyof Header;
+    id: keyof RaceDaysHeader;
     label: string;
     numeric: boolean;
 }
