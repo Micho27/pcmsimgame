@@ -6,13 +6,14 @@ import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
-import RaceDaysModal from '../RaceDaysModal';
+import RaceDaysModal from '../../RaceDaysModal';
 import StandingsHead from './StandingsHead';
-import { getUCIStandings } from '../../services/dbActions';
+import { getUCIStandings } from '../../../services/dbActions';
 import { GoogleSpreadsheetRow } from "google-spreadsheet";
 
 
-export interface Data {
+export interface Header {
+    position:number;
     teamName: string;
     teamPoints: number;
 }
@@ -42,11 +43,11 @@ const stableSort=(array: Array<GoogleSpreadsheetRow> , order:string, sortColumn:
 
 const StandingsTable = () => {
     const [order, setOrder] = useState<Order>('desc');
-    const [orderBy, setOrderBy] = useState<keyof Data>('teamPoints');
+    const [orderBy, setOrderBy] = useState<keyof Header>('teamPoints');
     const [loading, setLoading] = useState(false);
     const [uciStandingsData, setuciStandingsData] = useState<Array<GoogleSpreadsheetRow>>([]);
 
-    //function fetches uci data from database
+    //function fetches uci data from google sheets file
     const fetchTeamStandings = async () => {
         setLoading(true)
 
@@ -62,7 +63,7 @@ const StandingsTable = () => {
 
     const handleRequestSort = (
         event: React.MouseEvent<unknown>,
-        property: keyof Data,
+        property: keyof Header,
     ) => {
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc');
@@ -75,7 +76,7 @@ const StandingsTable = () => {
     );
         
     return (
-        <TableContainer sx={{ marginTop: 5 }} className="standingsTableBack">
+        <TableContainer className="standingsTableBack">
             <Table component={Paper} className='standingsTable' aria-label="customized table">
                 <StandingsHead
                     order={order}
@@ -83,8 +84,9 @@ const StandingsTable = () => {
                     onRequestSort={handleRequestSort}
                 />
                 <TableBody>
-                    {sortedStandings.map((row) =>
+                    {sortedStandings.map((row,index) =>
                         (<StyledTableRow key={row.get('teamName')} >
+                            <TableCell>{index+1}</TableCell>
                             <TableCell>{row.get('teamName')}</TableCell>
                             <TableCell>{row.get('teamPoints')}</TableCell>
                         </StyledTableRow>))}

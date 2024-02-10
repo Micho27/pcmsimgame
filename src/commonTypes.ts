@@ -4,10 +4,8 @@ export type uciStandings = {
     points: number;
 }
 
-// export const wtPoints = {
-//     'gvs': {
-//         'stage': [65, 40, 25, 15, 10, 7, 5, 3, 2, 1,],
-//         'gc-daily': [18, 9, 4, 2]
-//     },
-//     'gvgc': [],
-// };
+export interface TabPanelProps {
+    children?: React.ReactNode;
+    index: number;
+    value: number;
+}

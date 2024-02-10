@@ -5,21 +5,27 @@ import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import Box from '@mui/material/Box';
 import { visuallyHidden } from '@mui/utils';
-import { Data,Order } from './StandingsTable';
+import { Header,Order } from './StandingsTable';
 
 interface HeadCell {
     disablePadding: boolean;
-    id: keyof Data;
+    id: keyof Header;
     label: string;
     numeric: boolean;
 }
 
 const headCells: readonly HeadCell[] = [
     {
+        id:'position',
+        numeric: false,
+        disablePadding:false,
+        label:"Position"
+    },
+    {
         id: 'teamName',
         numeric: false,
         disablePadding: true,
-        label: 'TeamName',
+        label: 'Team Name',
     },
     {
         id: 'teamPoints',
@@ -30,7 +36,7 @@ const headCells: readonly HeadCell[] = [
 ]
 
 interface EnhancedTableProps {
-    onRequestSort: (event: React.MouseEvent<unknown>, property: keyof Data) => void;
+    onRequestSort: (event: React.MouseEvent<unknown>, property: keyof Header) => void;
     order: Order;
     orderBy: string;
 }
@@ -38,7 +44,7 @@ interface EnhancedTableProps {
 const StandingsHead = (props: EnhancedTableProps) => {
     const { order, orderBy, onRequestSort } = props;
     const createSortHandler =
-        (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
+        (property: keyof Header) => (event: React.MouseEvent<unknown>) => {
             onRequestSort(event, property);
         };
 
