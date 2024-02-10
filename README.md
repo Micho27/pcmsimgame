@@ -1,8 +1,8 @@
 # What is this?
 
-A friend of mine uses pro cycling manager to simulate a cycling racing season with each participant managin one team. This is a site I built to help streamline some of the laborious tasks such as updating rider race days and keeping track of the standings. For the moment
-it is all pretty basic but i hope one day it will turn into something cool that maybe other groups will be able to use to run their own
-races.
+A friend of mine uses pro cycling manager to simulate a cycling racing season with each participant managin one team. This is a site I built to help keep track of the standings and race days used without the need to share access to excel files and google sheets.
+It is all pretty basic but i hope one day it will turn into something cool that maybe other groups will be able to use to run their own
+races with.
 
 ## Available Scripts
 
