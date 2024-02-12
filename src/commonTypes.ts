@@ -13,6 +13,7 @@ export interface TabPanelProps {
 }
 
 export type Order = 'asc' | 'desc';
+export type TeamLevels = 'All' | 'wt' | 'pt' | 'ct';
 
 //bare bones manual assigning of level to each team.
 //in future will replace with a query to the race days sheets and store in redux
@@ -98,8 +99,14 @@ const combineTeams = () => {
 
 export const teamLevelsCombinedMap = combineTeams();
 
-export const stableSort=(array: Array<GoogleSpreadsheetRow> , order:string, sortColumn:string) => {
-    return array.sort((a:GoogleSpreadsheetRow,b) => {
-        return order === 'desc' ? b.get(sortColumn)-a.get(sortColumn):a.get(sortColumn)-b.get(sortColumn)
+export const stableSort=(array: Array<GoogleSpreadsheetRow> , order:string, sortColumn:string, filter?:String) => {
+    let filterArray=array;
+    
+    if(filter !== 'All') {
+        filterArray=array.filter((row) => teamLevelsCombinedMap.get(row.get('riderTeam')) === filter);
+    }
+
+    return filterArray.sort((a:GoogleSpreadsheetRow,b) => {
+        return order === 'desc' ? b.get(sortColumn)-a.get(sortColumn):a.get(sortColumn)-b.get(sortColumn);
     });
 };

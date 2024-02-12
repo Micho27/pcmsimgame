@@ -6,15 +6,17 @@ import Paper from '@mui/material/Paper';
 import StandingsHead, { RiderStandingsHeader } from './RiderStandingsHead';
 import { getRiderStandings } from '../../../services/dbActions';
 import { GoogleSpreadsheetRow } from "google-spreadsheet";
-import { Order, stableSort } from "../../../commonTypes";
+import { Order, TeamLevels, stableSort } from "../../../commonTypes";
 import { getRiderRow } from "./RiderUtils";
+import { RiderLevelFilter } from "./RiderLevelFilter";
 
 const RiderStandingsTable = () => {
     const [order, setOrder] = useState<Order>('desc');
     const [orderBy, setOrderBy] = useState<keyof RiderStandingsHeader>('teamPoints');
+    const [filter, setFilter]=useState<TeamLevels>('All')
     const [loading, setLoading] = useState(false);
     const [riderStandingsData, setriderStandingsData] = useState<Array<GoogleSpreadsheetRow>>([]);
-
+    
     //function fetches uci data from google sheets file
     const fetchRiderStandings = async () => {
         setLoading(true)
@@ -29,35 +31,28 @@ const RiderStandingsTable = () => {
         fetchRiderStandings()
     }, [])
 
-    const handleRequestSort = (
-        event: React.MouseEvent<unknown>,
-        property: keyof RiderStandingsHeader,
-    ) => {
-        const isAsc = orderBy === property && order === 'asc';
-        setOrder(isAsc ? 'desc' : 'asc');
-        setOrderBy(property);
-    };
-
     const sortedStandings = useMemo(
-        () => stableSort(riderStandingsData, order, orderBy),
-        [order, orderBy, loading],
+        () => stableSort(riderStandingsData, order, orderBy,filter),
+        [order, loading, filter],
     );
-        
+    
     return (
-        <TableContainer className="standingsTableBack">
-            <Table component={Paper} className='standingsTable' aria-label="customized table">
-                <StandingsHead
-                    order={order}
-                    orderBy={orderBy}
-                    onRequestSort={handleRequestSort}
-                />
-                <TableBody>
-                    {sortedStandings.map((row) =>
-                        getRiderRow(row)
-                    )}
-                </TableBody>
-            </Table>
-        </TableContainer>
+        <>
+            <RiderLevelFilter setFilter={setFilter} />
+            <TableContainer sx={{zIndex:-1}} className="standingsTableBack">
+                <Table component={Paper} className='standingsTable' aria-label="customized table">
+                    <StandingsHead
+                        order={order}
+                        orderBy={orderBy}
+                    />
+                    <TableBody>
+                        {sortedStandings.map((row) =>
+                            getRiderRow(row)
+                        )}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </>
     )
 };
 
