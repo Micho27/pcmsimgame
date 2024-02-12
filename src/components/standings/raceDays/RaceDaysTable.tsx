@@ -34,7 +34,7 @@ const RaceDaysTable = (props:RaceDaysTableProps) => {
         setLoading(true)
 
         const res: Array<GoogleSpreadsheetRow> = await getRaceDays(level);
-        console.log(res);
+        
         setraceDaysData([...res])
         setLoading(false)
     };
