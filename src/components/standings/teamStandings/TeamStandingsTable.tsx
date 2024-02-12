@@ -10,6 +10,7 @@ import { Order } from "../../../commonTypes";
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import { getRow } from "./TeamUtils";
+import LoadingScreen from "../LoadingScreen";
 
 export interface UciStandingsHeader {
     teamRank:number;
@@ -72,6 +73,7 @@ const TeamStandingsTable = () => {
     );
     
     return (
+        loading ? <LoadingScreen /> :
         <TableContainer className="UcistandingsTableBack">
             <Table component={Paper} className='UcistandingsTable' aria-label="customized table">
                 <StandingsHead
@@ -80,7 +82,7 @@ const TeamStandingsTable = () => {
                     onRequestSort={handleRequestSort}
                 />
                 <TableBody>
-                    {
+                    {   
                         sortedStandings.map((row,index) => {
                             const defaultRow = getRow(row);
                             

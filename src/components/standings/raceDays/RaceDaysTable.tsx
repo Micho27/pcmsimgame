@@ -9,6 +9,7 @@ import { styled } from '@mui/material/styles';
 import { getRaceDays } from '../../../services/dbActions';
 import { GoogleSpreadsheetRow } from "google-spreadsheet";
 import RaceDaysHead from "./RaceDaysHead";
+import LoadingScreen from "../LoadingScreen";
 
 interface RaceDaysTableProps {
     level:string;
@@ -44,6 +45,7 @@ const RaceDaysTable = (props:RaceDaysTableProps) => {
     }, [])
         
     return (
+        loading ? <LoadingScreen /> :
         <TableContainer className="standingsTableBack">
             <Table component={Paper} className='standingsTable' aria-label="customized table">
                 <RaceDaysHead
