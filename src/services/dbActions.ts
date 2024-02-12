@@ -39,7 +39,7 @@ export const getRaceMetaData = async (raceName:string) => {
 
 export const getNationStandings = async () => {
     const doc=await getDbStandings();
-    return doc.sheetsById[nationStandingsGid].getRows();
+    return doc.sheetsById[nationStandingsGid].getRows({ offset: 1 });
 };
 
 export const getRaceDays = async (level:string) => {

@@ -7,8 +7,10 @@ import { visuallyHidden } from '@mui/utils';
 import { Order } from "../../../commonTypes";
 
 export interface RiderStandingsHeader {
-    position:number;
-    teamName: string;
+    riderRank:number;
+    riderName:String;
+    teamName: String;
+    teamLevel: String;
     teamPoints: number;
 }
 
@@ -21,16 +23,28 @@ interface HeadCell {
 
 const headCells: readonly HeadCell[] = [
     {
-        id:'position',
+        id:'riderRank',
         numeric: false,
         disablePadding:false,
-        label:"Position"
+        label:"Rank"
+    },
+    {
+        id: 'riderName',
+        numeric: false,
+        disablePadding: true,
+        label: 'Rider Name',
     },
     {
         id: 'teamName',
         numeric: false,
         disablePadding: true,
         label: 'Team Name',
+    },
+    {
+        id: 'teamLevel',
+        numeric: false,
+        disablePadding: true,
+        label: 'Team level',
     },
     {
         id: 'teamPoints',

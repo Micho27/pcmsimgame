@@ -1,31 +1,13 @@
 import { useState, useEffect, useMemo } from "react"
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
-import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { styled } from '@mui/material/styles';
-import StandingsHead, { RiderStandingsHeader } from './StandingsHead';
+import StandingsHead, { RiderStandingsHeader } from './RiderStandingsHead';
 import { getRiderStandings } from '../../../services/dbActions';
 import { GoogleSpreadsheetRow } from "google-spreadsheet";
-import { Order } from "../../../commonTypes";
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    '&:nth-of-type(odd)': {
-        backgroundColor: theme.palette.action.hover,
-    },
-    // hide last border
-    '&:last-child td, &:last-child th': {
-        border: 0,
-    },
-}));
-
-const stableSort=(array: Array<GoogleSpreadsheetRow> , order:string, sortColumn:string) => {
-    return array.sort((a:GoogleSpreadsheetRow,b) => {
-        return order === 'desc' ? b.get(sortColumn)-a.get(sortColumn):a.get(sortColumn)-b.get(sortColumn)
-    });
-};
+import { Order, stableSort } from "../../../commonTypes";
+import { getRiderRow } from "./RiderUtils";
 
 const RiderStandingsTable = () => {
     const [order, setOrder] = useState<Order>('desc');
@@ -70,13 +52,9 @@ const RiderStandingsTable = () => {
                     onRequestSort={handleRequestSort}
                 />
                 <TableBody>
-                    {sortedStandings.map((row,index) =>
-                        (<StyledTableRow key={row.get('riderName')} >
-                            <TableCell>{row.get('riderRank')}</TableCell>
-                            <TableCell>{row.get('riderName')}</TableCell>
-                            <TableCell>{row.get('riderTeam')}</TableCell>
-                            <TableCell>{row.get('riderPoints')}</TableCell>
-                        </StyledTableRow>))}
+                    {sortedStandings.map((row) =>
+                        getRiderRow(row)
+                    )}
                 </TableBody>
             </Table>
         </TableContainer>
