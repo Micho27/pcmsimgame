@@ -9,10 +9,16 @@ import { styled } from '@mui/material/styles';
 import StandingsHead from './StandingsHead';
 import { getTeamStanding } from '../../../services/dbActions';
 import { GoogleSpreadsheetRow } from "google-spreadsheet";
-import { Order } from "../../../commonTypes";
+import { Order, teamLevelsCombinedMap } from "../../../commonTypes";
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
+import HorizontalRuleIcon from '@mui/icons-material/HorizontalRule';
 
 export interface UciStandingsHeader {
     teamRank:number;
+    tamIcon:any;
     teamName: string;
     teamPoints: number;
 }
@@ -66,7 +72,37 @@ const TeamStandingsTable = () => {
         () => stableSort(uciStandingsData, order, orderBy),
         [order, orderBy, loading],
     );
-        
+    
+    const getRow = (row:GoogleSpreadsheetRow) => {
+        const teamLevel = teamLevelsCombinedMap.get(row.get('teamName'));
+
+        let demotionIcon;
+        switch (teamLevel) {
+            case 'wt': 
+                demotionIcon=row.get('teamRank')<=15 ? <HorizontalRuleIcon /> : row.get('teamRank')<=30 ? <KeyboardArrowDownIcon /> : <KeyboardDoubleArrowDownIcon />;
+                break;
+
+            case 'pt':
+                demotionIcon=row.get('teamRank')<=15 ? <KeyboardArrowUpIcon /> : row.get('teamRank')<=30 ? <HorizontalRuleIcon /> : <KeyboardArrowDownIcon />;
+                break;
+
+            case 'ct':
+                demotionIcon=row.get('teamRank')<=15 ? <KeyboardDoubleArrowUpIcon /> : row.get('teamRank')<=30 ? <KeyboardArrowUpIcon /> : <HorizontalRuleIcon />;
+                break;
+            
+            default:
+        }
+
+        return (
+            <StyledTableRow key={row.get('teamName')} >
+                <TableCell>{row.get('teamRank')}</TableCell>
+                <TableCell>{demotionIcon}</TableCell>
+                <TableCell>{row.get('teamName')}</TableCell>
+                <TableCell>{row.get('teamPoints')}</TableCell>
+            </StyledTableRow>
+        )
+    }
+
     return (
         <TableContainer className="UcistandingsTableBack">
             <Table component={Paper} className='UcistandingsTable' aria-label="customized table">
@@ -76,12 +112,36 @@ const TeamStandingsTable = () => {
                     onRequestSort={handleRequestSort}
                 />
                 <TableBody>
-                    {sortedStandings.map((row) =>
-                        (<StyledTableRow key={row.get('teamName')} >
-                            <TableCell>{row.get('teamRank')}</TableCell>
-                            <TableCell>{row.get('teamName')}</TableCell>
-                            <TableCell>{row.get('teamPoints')}</TableCell>
-                        </StyledTableRow>))}
+                    {
+                        sortedStandings.map((row,index) => {
+                            const teamRow=getRow(row)
+                            if (index === 0)
+                                return <>
+                                    <TableRow>
+                                        <TableCell> World Tour next season</TableCell>
+                                    </TableRow> 
+                                    {teamRow}
+                                </>
+
+                            if(index === 15) 
+                                return <>
+                                    <TableRow>
+                                        <TableCell> Pro Tour next season</TableCell>
+                                    </TableRow> 
+                                    {teamRow}
+                                </>
+                            
+                            if(index === 30) 
+                                return <>
+                                    <TableRow>
+                                        <TableCell> Continental Tour next season</TableCell>
+                                    </TableRow> 
+                                    {teamRow}
+                                </>
+
+                            return (teamRow);
+                        })
+                    }
                 </TableBody>
             </Table>
         </TableContainer>

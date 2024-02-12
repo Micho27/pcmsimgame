@@ -23,6 +23,12 @@ const headCells: readonly HeadCell[] = [
         label:"Rank"
     },
     {
+        id:'tamIcon',
+        numeric: false,
+        disablePadding:false,
+        label:""
+    },
+    {
         id: 'teamName',
         numeric: false,
         disablePadding: true,
