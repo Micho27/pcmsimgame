@@ -1,3 +1,5 @@
+import { GoogleSpreadsheetRow } from "google-spreadsheet";
+
 export type uciStandings = {
     id: string,
     teams: string,
@@ -95,3 +97,9 @@ const combineTeams = () => {
 };
 
 export const teamLevelsCombinedMap = combineTeams();
+
+export const stableSort=(array: Array<GoogleSpreadsheetRow> , order:string, sortColumn:string) => {
+    return array.sort((a:GoogleSpreadsheetRow,b) => {
+        return order === 'desc' ? b.get(sortColumn)-a.get(sortColumn):a.get(sortColumn)-b.get(sortColumn)
+    });
+};

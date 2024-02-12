@@ -18,11 +18,24 @@ export interface UciStandingsHeader {
     teamPoints: number;
 }
 
+interface TitleProps {
+    text:string;
+}
+
 const stableSort=(array: Array<GoogleSpreadsheetRow> , order:Order, sortColumn:string) => {
     return array.sort((a:GoogleSpreadsheetRow,b) => {
         return order === 'desc' ? b.get(sortColumn)-a.get(sortColumn):a.get(sortColumn)-b.get(sortColumn)
     });
 };
+
+const TitleRow = (props:TitleProps) => {
+    const {text} = props;
+    return (
+        <TableRow>
+            <TableCell colSpan={4} align="center" sx={{color:'white'}} className="TitleRow">{text}</TableCell>
+        </TableRow> 
+    )
+}
 
 const TeamStandingsTable = () => {
     const [order, setOrder] = useState<Order>('desc');
@@ -75,9 +88,7 @@ const TeamStandingsTable = () => {
                             if (row.get('teamRank') === '1') {
                                 return order === 'desc' ?
                                     <>
-                                        <TableRow>
-                                            <TableCell colSpan={4}> World Tour next season</TableCell>
-                                        </TableRow> 
+                                        <TitleRow text='World Tour next season' />
                                         {defaultRow}
                                     </> :
                                     <>
@@ -89,16 +100,12 @@ const TeamStandingsTable = () => {
                             if(row.get('teamRank') === '16') {
                                 return order === 'desc' ?
                                     <>
-                                        <TableRow>
-                                            <TableCell colSpan={4}> Pro Tour next season</TableCell>
-                                        </TableRow> 
+                                        <TitleRow text='Pro Tour next season' />
                                         {defaultRow}
                                     </> :
                                     <>
                                         {defaultRow}
-                                        <TableRow>
-                                            <TableCell colSpan={4}> World Tour next season</TableCell>
-                                        </TableRow> 
+                                        <TitleRow text='World Tour next season' />
                                     </>;
                             }
 
@@ -106,24 +113,18 @@ const TeamStandingsTable = () => {
                             if(row.get('teamRank') === '31') {
                                 return order === 'desc' ?
                                     <>
-                                        <TableRow>
-                                            <TableCell colSpan={4}> Continental Tour next season</TableCell>
-                                        </TableRow> 
+                                        <TitleRow text='Continental Tour next season' />
                                         {defaultRow}
                                     </> :
                                     <>
                                         {defaultRow}
-                                        <TableRow>
-                                            <TableCell colSpan={4}> Pro Tour next season</TableCell>
-                                        </TableRow> 
+                                        <TitleRow text='Pro Tour next season' />
                                     </>;
                             }
 
                             if(order == 'asc' && index === 0 ) {
                                 return (<>
-                                    <TableRow>
-                                            <TableCell colSpan={4}> Continental Tour next season</TableCell>
-                                    </TableRow> 
+                                    <TitleRow text='Continental Tour next season' />
                                     {defaultRow}
                                 </>);
                             }
