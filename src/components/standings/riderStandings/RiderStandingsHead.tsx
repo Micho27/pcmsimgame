@@ -55,17 +55,12 @@ const headCells: readonly HeadCell[] = [
 ]
 
 interface EnhancedTableProps {
-    onRequestSort: (event: React.MouseEvent<unknown>, property: keyof RiderStandingsHeader) => void;
     order: Order;
     orderBy: string;
 }
 
 const StandingsHead = (props: EnhancedTableProps) => {
-    const { order, orderBy, onRequestSort } = props;
-    // const createSortHandler =
-    //     (property: keyof RiderStandingsHeader) => (event: React.MouseEvent<unknown>) => {
-    //         onRequestSort(event, property);
-    //     };
+    const { order, orderBy } = props;
 
     return (
         <TableHead>
