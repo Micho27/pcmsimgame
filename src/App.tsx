@@ -9,6 +9,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import RaceSelect from "./components/standings/raceQuerys/RaceSelect";
 
 const  CustomTabPanel = (props: TabPanelProps) => {
   const { children, value, index, ...other } = props;
@@ -53,7 +54,7 @@ const App = () => {
               aria-label="secondary tabs example">
             <Tab label="UCI Standings" />
             <Tab label="Rider race Days used" />
-            <Tab label="Query race results? maybe in future??!?" disabled />
+            <Tab label="Query race results? maybe in future??!?" disabled/>
           </Tabs>
         </Box>
         <CustomTabPanel value={value} index={0}>
@@ -61,6 +62,9 @@ const App = () => {
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
           <RaceDaysLevelTabs />
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={2}>
+          <RaceSelect />
         </CustomTabPanel>
       </Box>
     </div>

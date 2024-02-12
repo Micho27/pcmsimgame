@@ -1,4 +1,6 @@
+import { GoogleSpreadsheetWorksheet } from "google-spreadsheet";
 import { getDbDays, getDbStandings } from "./db"
+import { refType } from "@mui/utils";
 
 //gid to grab race days
 const wtRaceDaysGid:number=+process.env.REACT_APP_SHEETS_GID_WT_RACE_DAYS!;
@@ -10,6 +12,9 @@ const teamStandingsGid:number=+process.env.REACT_APP_SHEETS_GID_TEAM_STANDINGS!;
 const riderStandingsGid:number=+process.env.REACT_APP_SHEETS_GID_RIDER_STANDINGS!;
 const nationStandingsGid:number=+process.env.REACT_APP_SHEETS_GID_NATION_STANDINGS!;
 
+//useful list of non race sheets in the standings spreadsheet
+const nonRaces=["Nations Standings","Info","Points","Team Standings","Template","Tutorial"];
+
 export const getTeamStanding = async () => {
     const doc=await getDbStandings();
     return doc.sheetsById[teamStandingsGid].getRows({ offset: 2 });
@@ -20,22 +25,20 @@ export const getRiderStandings = async () => {
     return doc.sheetsById[riderStandingsGid].getRows({ offset: 2 });
 };
 
-export const getRaceMetaData = async (raceName:string) => {
-    const doc=await getDbStandings()
-
-    const race=doc.sheetsByTitle[raceName];
-    await race.loadCells('A4:A11');
-
-    const raceType=race.getCellByA1('A5').value;
-    const raceLevel=race.getCellByA1('A8').value;
-    const stages=race.getCellByA1('A11').value;
-
-    return {
-        raceType,
-        raceLevel,
-        stages,
-    }
+const getRaceAbbrev = (sheets:any) => {
+    const hi = sheets.map((sheet:GoogleSpreadsheetWorksheet) => {
+         return sheet.title;
+    });
+    return hi;
 }
+
+//grabs array of rows that have all race names/abbreviations/types/stages/level
+export const getRaceMetaData = async () => {
+    const doc=await getDbStandings();
+    const calender=doc.sheetsByTitle['Calander'];
+    
+    return calender.getRows();
+};
 
 export const getNationStandings = async () => {
     const doc=await getDbStandings();
