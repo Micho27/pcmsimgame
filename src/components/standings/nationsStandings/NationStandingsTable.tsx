@@ -10,6 +10,7 @@ import { getNationStandings } from '../../../services/dbActions';
 import { GoogleSpreadsheetRow } from "google-spreadsheet";
 import NationsHead, { NationsHeader } from "./NationsHead";
 import { Order, stableSort } from "../../../commonTypes";
+import LoadingScreen from "../LoadingScreen";
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
@@ -47,6 +48,7 @@ const NationStandingsTable = () => {
     );
 
     return (
+        loading ? <LoadingScreen /> :
         <TableContainer className="standingsTableBack">
             <Table component={Paper} className='standingsTable' aria-label="customized table">
                 <NationsHead />
