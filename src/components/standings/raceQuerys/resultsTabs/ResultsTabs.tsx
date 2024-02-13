@@ -37,12 +37,14 @@ const ResultsTabs = (props:ResultsTabsProps) => {
     const { abbrv, stage } = props;
     const [value, setValue] = useState(0);
     const [raceSheet,setRaceSheet] = useState<Array<GoogleSpreadsheetRow>>();
+
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
       setValue(newValue);
     };
     
     const fetchRaceSheet = async () => {
         const res: Array<GoogleSpreadsheetRow> = await getResultSheet(abbrv);
+        console.log(res);
 
         setRaceSheet([...res])
     };
@@ -51,12 +53,14 @@ const ResultsTabs = (props:ResultsTabsProps) => {
         fetchRaceSheet()
     }, [])
 
+
     const getStageResult = () => {
-        const results= raceSheet?.map((row) => {
+        const results= raceSheet!.map((row) => {
             return row.get('Stages')
         });
-        
-        return results!.slice(stage,stage+10);
+
+        const start = (stage-1)*10 + stage;
+        return results!.slice(start,start+10);
     };
 
     return (
