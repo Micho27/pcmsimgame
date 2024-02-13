@@ -9,14 +9,16 @@ import { GoogleSpreadsheetRow } from 'google-spreadsheet';
 
 interface StageSelectProps {
     numStages:number;
+    setStage:any;
 }
 
 const StageSelect = (props:StageSelectProps) => {
-    const { numStages } = props;
+    const { numStages, setStage } = props;
     const [selectedStage, setselectedStage] = useState('');
 
     const handleChange = (event: SelectChangeEvent) => {
         setselectedStage(event.target.value as string);
+        setStage(+event.target.value);
     };
 
     return (
@@ -31,7 +33,7 @@ const StageSelect = (props:StageSelectProps) => {
                     onChange={handleChange}
                 >
                     {
-                        [...Array(numStages)].map((e,i)=> {
+                        Array.from('x'.repeat(numStages)).map((e,i)=> {
                             return (
                                 <MenuItem value={i+1}>{'Stage '+ (i+1)}</MenuItem>
                             )
