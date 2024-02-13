@@ -36,29 +36,34 @@ const  StandingsTabPanel = (props: TabPanelProps) => {
 const ResultsTabs = (props:ResultsTabsProps) => {
     const { abbrv, stage } = props;
     const [value, setValue] = useState(0);
-    const [raceSheet,setRaceSheet] = useState<Array<GoogleSpreadsheetRow>>();
+    const [loading,setLoading] = useState(false);
+    const [raceSheet,setRaceSheet] = useState<Array<GoogleSpreadsheetRow>>([]);
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
       setValue(newValue);
     };
     
     const fetchRaceSheet = async () => {
+        setLoading(true)
+
         const res: Array<GoogleSpreadsheetRow> = await getResultSheet(abbrv);
-        console.log(res);
 
         setRaceSheet([...res])
+        setLoading(false)
     };
 
-    useEffect(() => {
-        fetchRaceSheet()
-    }, [])
-
+    useEffect(()=>{
+        console.log('useEffect');
+        fetchRaceSheet();
+    }, []);
+    
 
     const getStageResult = () => {
+        console.log('hello',raceSheet);
         const results= raceSheet!.map((row) => {
             return row.get('Stages')
         });
-
+    
         const start = (stage-1)*10 + stage;
         return results!.slice(start,start+10);
     };
