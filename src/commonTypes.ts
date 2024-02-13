@@ -99,11 +99,12 @@ const combineTeams = () => {
 
 export const teamLevelsCombinedMap = combineTeams();
 
-export const stableSort=(array: Array<GoogleSpreadsheetRow> , order:string, sortColumn:string, filter?:String) => {
+//optional filter and column to be filtered
+export const stableSort=(array: Array<GoogleSpreadsheetRow> , order:string, sortColumn:string, filter?:String,column?:string) => {
     let filterArray=array;
     
-    if(filter !== 'All') {
-        filterArray=array.filter((row) => teamLevelsCombinedMap.get(row.get('riderTeam')) === filter);
+    if(filter !== 'All' && column) {
+        filterArray=array.filter((row) => teamLevelsCombinedMap.get(row.get(column)) === filter);
     }
 
     return filterArray.sort((a:GoogleSpreadsheetRow,b) => {
