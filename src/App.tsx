@@ -9,7 +9,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import RaceSelect from "./components/standings/raceQuerys/RaceSelect";
+import RaceQueryContainer from "./components/standings/raceQuerys/RaceQueryContainer";
 
 const  CustomTabPanel = (props: TabPanelProps) => {
   const { children, value, index, ...other } = props;
@@ -64,7 +64,7 @@ const App = () => {
           <RaceDaysLevelTabs />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={2}>
-          <RaceSelect />
+            <RaceQueryContainer />
         </CustomTabPanel>
       </Box>
     </div>
