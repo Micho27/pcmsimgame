@@ -11,16 +11,14 @@ const RaceQueryContainer = () => {
 
     useEffect(() => {
         raceRow ?  setNumStages(raceRow.get('Racedays')) : setNumStages(1);
+        setStage(undefined);
     }, [raceRow])
-    
-    useEffect(() => {
-    }, [stage])
 
     return (
         <div>
             <RaceSelect setRaceRow={setRaceRow}/>
             { raceRow ? <StageSelect numStages={numStages} setStage={setStage}/> : <></> }
-            { raceRow && stage ? <ResultsTabs abbrv={raceRow.get('Abb') } stage={stage} />:<></> }
+            { stage ? <ResultsTabs abbrv={raceRow!.get('Abb') } stage={stage} /> : <></> }
         </div>
     )
 };
