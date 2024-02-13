@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import RaceSelect from "./RaceSelect";
 import StageSelect from "./StageSelect";
 import { GoogleSpreadsheetRow } from "google-spreadsheet";
+import ResultsTabs from "./resultsTabs/ResultsTabs";
 
 const RaceQueryContainer = () => {
     const [raceRow,setRaceRow]=useState<GoogleSpreadsheetRow | undefined>(undefined);
@@ -18,8 +19,8 @@ const RaceQueryContainer = () => {
     return (
         <div>
             <RaceSelect setRaceRow={setRaceRow}/>
-            {raceRow ? <StageSelect numStages={numStages} setStage={setStage}/> : <></> }
-            {raceRow && stage ? <>hi</>:<></>}
+            { raceRow ? <StageSelect numStages={numStages} setStage={setStage}/> : <></> }
+            { raceRow && stage ? <ResultsTabs abbrv={raceRow.get('Abb') } stage={stage} />:<></> }
         </div>
     )
 };
