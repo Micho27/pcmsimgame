@@ -45,6 +45,11 @@ export const getNationStandings = async () => {
     return doc.sheetsById[nationStandingsGid].getRows({ offset: 1 });
 };
 
+export const getResultSheet = async (abbrv:string) => {
+    const doc=await getDbStandings();
+    return doc.sheetsByTitle[abbrv].getRows();
+};
+
 export const getRaceDays = async (level:string) => {
     const doc= await getDbDays();
     
