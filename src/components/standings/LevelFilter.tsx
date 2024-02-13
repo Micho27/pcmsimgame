@@ -1,12 +1,12 @@
 import { Dropdown, Menu, MenuButton as BaseMenuButton, MenuItem as BaseMenuItem } from "@mui/base"
 import { menuItemClasses, styled } from "@mui/material"
-import { TeamLevels } from "../../../commonTypes";
+import { TeamLevels } from "../../commonTypes";
 
 interface FilterProps {
     setFilter:React.Dispatch<React.SetStateAction<TeamLevels>>;
 }
   
-export const RiderLevelFilter = (props:FilterProps) => {
+export const LevelFilter = (props:FilterProps) => {
     const { setFilter } = props;
 
     return (
@@ -126,4 +126,3 @@ const MenuItem = styled(BaseMenuItem)(
     }
     `,
   );
-  

@@ -8,8 +8,8 @@ import { getRiderStandings } from '../../../services/dbActions';
 import { GoogleSpreadsheetRow } from "google-spreadsheet";
 import { Order, TeamLevels, stableSort } from "../../../commonTypes";
 import { getRiderRow } from "./RiderUtils";
-import { RiderLevelFilter } from "./RiderLevelFilter";
 import LoadingScreen from "../LoadingScreen";
+import { LevelFilter } from "../LevelFilter";
 
 const RiderStandingsTable = () => {
     const [order, setOrder] = useState<Order>('desc');
@@ -40,7 +40,7 @@ const RiderStandingsTable = () => {
     return (
         loading ? <LoadingScreen /> :
         <>
-            <RiderLevelFilter setFilter={setFilter} />
+            <LevelFilter setFilter={setFilter} />
             <TableContainer sx={{zIndex:-1}} className="standingsTableBack">
                 <Table component={Paper} className='standingsTable' aria-label="customized table">
                     <StandingsHead

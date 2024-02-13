@@ -6,11 +6,12 @@ import Paper from '@mui/material/Paper';
 import StandingsHead from './StandingsHead';
 import { getTeamStanding } from '../../../services/dbActions';
 import { GoogleSpreadsheetRow } from "google-spreadsheet";
-import { Order } from "../../../commonTypes";
+import { Order, TeamLevels, stableSort } from "../../../commonTypes";
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import { getRow } from "./TeamUtils";
 import LoadingScreen from "../LoadingScreen";
+import { LevelFilter } from "../LevelFilter";
 
 export interface UciStandingsHeader {
     teamRank:number;
@@ -22,12 +23,6 @@ export interface UciStandingsHeader {
 interface TitleProps {
     text:string;
 }
-
-const stableSort=(array: Array<GoogleSpreadsheetRow> , order:Order, sortColumn:string) => {
-    return array.sort((a:GoogleSpreadsheetRow,b) => {
-        return order === 'desc' ? b.get(sortColumn)-a.get(sortColumn):a.get(sortColumn)-b.get(sortColumn)
-    });
-};
 
 const TitleRow = (props:TitleProps) => {
     const {text} = props;
@@ -42,6 +37,7 @@ const TeamStandingsTable = () => {
     const [order, setOrder] = useState<Order>('desc');
     const [orderBy, setOrderBy] = useState<keyof UciStandingsHeader>('teamPoints');
     const [loading, setLoading] = useState(false);
+    const [filter, setFilter]=useState<TeamLevels>('All')
     const [uciStandingsData, setuciStandingsData] = useState<Array<GoogleSpreadsheetRow>>([]);
 
     //function fetches uci data from google sheets file
@@ -68,75 +64,79 @@ const TeamStandingsTable = () => {
     };
 
     const sortedStandings = useMemo(
-        () => stableSort(uciStandingsData, order, orderBy),
-        [order, orderBy, loading],
+        () => stableSort(uciStandingsData, order, orderBy, filter,'teamName'),
+        [order, orderBy, loading,filter],
     );
     
     return (
         loading ? <LoadingScreen /> :
-        <TableContainer className="UcistandingsTableBack">
-            <Table component={Paper} className='UcistandingsTable' aria-label="customized table">
-                <StandingsHead
-                    order={order}
-                    orderBy={orderBy}
-                    onRequestSort={handleRequestSort}
-                />
-                <TableBody>
-                    {   
-                        sortedStandings.map((row,index) => {
-                            const defaultRow = getRow(row);
-                            
-                            // world tour title for following season
-                            if (row.get('teamRank') === '1') {
-                                return order === 'desc' ?
-                                    <>
-                                        <TitleRow text='World Tour next season' />
-                                        {defaultRow}
-                                    </> :
-                                    <>
-                                        {defaultRow}
-                                    </>;
-                            }
+        <>
+            <LevelFilter setFilter={setFilter} />
+            <TableContainer className="UcistandingsTableBack">
+                <Table component={Paper} className='UcistandingsTable' aria-label="customized table">
+                    <StandingsHead
+                        order={order}
+                        orderBy={orderBy}
+                        onRequestSort={handleRequestSort}
+                    />
+                    <TableBody>
+                        {   
+                            sortedStandings.map((row,index) => {
+                                const defaultRow = getRow(row);
+                                
+                                if(filter === 'All') {
+                                    // world tour title for following season
+                                    if (row.get('teamRank') === '1') {
+                                        return order === 'desc' ?
+                                            <>
+                                                <TitleRow text='World Tour next season' />
+                                                {defaultRow}
+                                            </> :
+                                            <>
+                                                {defaultRow}
+                                            </>;
+                                    }
 
-                            // pro tour title for following season
-                            if(row.get('teamRank') === '16') {
-                                return order === 'desc' ?
-                                    <>
-                                        <TitleRow text='Pro Tour next season' />
-                                        {defaultRow}
-                                    </> :
-                                    <>
-                                        {defaultRow}
-                                        <TitleRow text='World Tour next season' />
-                                    </>;
-                            }
+                                    // pro tour title for following season
+                                    if(row.get('teamRank') === '16') {
+                                        return order === 'desc' ?
+                                            <>
+                                                <TitleRow text='Pro Tour next season' />
+                                                {defaultRow}
+                                            </> :
+                                            <>
+                                                {defaultRow}
+                                                <TitleRow text='World Tour next season' />
+                                            </>;
+                                    }
 
-                            // cont tour title for following season                            
-                            if(row.get('teamRank') === '31') {
-                                return order === 'desc' ?
-                                    <>
-                                        <TitleRow text='Continental Tour next season' />
-                                        {defaultRow}
-                                    </> :
-                                    <>
-                                        {defaultRow}
-                                        <TitleRow text='Pro Tour next season' />
-                                    </>;
-                            }
+                                    // cont tour title for following season                            
+                                    if(row.get('teamRank') === '31') {
+                                        return order === 'desc' ?
+                                            <>
+                                                <TitleRow text='Continental Tour next season' />
+                                                {defaultRow}
+                                            </> :
+                                            <>
+                                                {defaultRow}
+                                                <TitleRow text='Pro Tour next season' />
+                                            </>;
+                                    }
 
-                            if(order == 'asc' && index === 0 ) {
-                                return (<>
-                                    <TitleRow text='Continental Tour next season' />
-                                    {defaultRow}
-                                </>);
-                            }
-                            
-                            return (defaultRow);
-                        })
-                    }
-                </TableBody>
-            </Table>
-        </TableContainer>
+                                    if(order == 'asc' && index === 0 ) {
+                                        return (<>
+                                            <TitleRow text='Continental Tour next season' />
+                                            {defaultRow}
+                                        </>);
+                                    }
+                                }
+                                return (defaultRow);
+                            })
+                        }
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </> 
     )
 };
 
