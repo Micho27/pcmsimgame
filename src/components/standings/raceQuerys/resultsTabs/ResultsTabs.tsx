@@ -4,13 +4,14 @@ import Box from "@mui/material/Box";
 import { useEffect, useState } from 'react';
 import Typography from '@mui/material/Typography';
 import { TabPanelProps } from '../../../../commonTypes';
-import { getResultSheet, getTTTCells } from '../../../../services/dbActions';
+import { getGcOneDay, getResultSheet, getTTTCells } from '../../../../services/dbActions';
 import { GoogleSpreadsheetRow } from 'google-spreadsheet';
 import ResultsTable from './ResultsTable';
 
 interface ResultsTabsProps {
     abbrv:string;
     stage:number;
+    oneDay:boolean;
 }
 
 const  StandingsTabPanel = (props: TabPanelProps) => {
@@ -34,11 +35,13 @@ const  StandingsTabPanel = (props: TabPanelProps) => {
   }
 
 const ResultsTabs = (props:ResultsTabsProps) => {
-    const { abbrv, stage } = props;
+    const { oneDay, abbrv, stage } = props;
     const [value, setValue] = useState(0);
     const [loading,setLoading] = useState(false);
     const [raceSheet,setRaceSheet] = useState<Array<GoogleSpreadsheetRow>>([]);
     const [TTTCells,setTTTCells] = useState<Array<string>>([]);
+    const [GcResult,setGcResult] = useState<Array<any>>([]);
+    
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
       setValue(newValue);
     };
@@ -48,32 +51,37 @@ const ResultsTabs = (props:ResultsTabsProps) => {
 
         const resRace: Array<GoogleSpreadsheetRow> = await getResultSheet(abbrv);
         const resCells: Array<any> = await getTTTCells(abbrv);
+        const resGc:Array<any> = await getGcOneDay(abbrv);
 
-        setRaceSheet([...resRace])
+        setRaceSheet([...resRace]);
         setTTTCells([...resCells]);
-        setLoading(false)
+        setGcResult([...resGc]);
+        setLoading(false);
     };
 
+    const noProvisional = oneDay || stage === 69;
     useEffect(()=>{
         fetchRaceSheet();
     }, []);
 
     const getStageResult = () => {
         const start = (stage-1)*10 + stage;
-        let tt;
+        
         let results= raceSheet!.map((row) => {
             return row.get('Stages')
         }).slice(start,start+10);
-        
+      
+        if(noProvisional) {
+          return GcResult;
+        }
+
         if(results[0] === '') {
            return TTTCells;
         }
 
         return results
     };
-    const data=getStageResult();
-    console.log(data);
-    
+
     return (
         <Box sx={{ width: '100%' }} >
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -82,15 +90,15 @@ const ResultsTabs = (props:ResultsTabsProps) => {
                   textColor="secondary"
                   indicatorColor="secondary"
                   aria-label="secondary tabs example">
-                    <Tab label="Stage Result" />
-                    <Tab label="Provisional GC" disabled/>
-                    <Tab label="Provisional Youth" disabled/>
-                    <Tab label="Provisional Points" disabled/>
-                    <Tab label="Provisional KOM" disabled/>
+                    <Tab label={noProvisional ? "Final GC" : "Stage Result"} />
+                    <Tab label={noProvisional ? "Final Youth" : "Provisional GC"} />
+                    <Tab label={noProvisional ? "Final Points" : "Provisional Youth"} />
+                    <Tab label={noProvisional ? "Final KOM" : "Provisional Points"} />
+                    {noProvisional ? <></>: <Tab label="Provisional KOM" />}
               </Tabs>
             </Box>
             <StandingsTabPanel value={value} index={0}>
-                <ResultsTable data={data}/>
+                <ResultsTable data={getStageResult()}/>
             </StandingsTabPanel>
         </Box>
     )

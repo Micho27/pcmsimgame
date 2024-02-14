@@ -23,7 +23,7 @@ const RaceQueryContainer = () => {
             </p>
             <RaceSelect setRaceRow={setRaceRow}/>
             { raceRow ? <StageSelect numStages={numStages} setStage={setStage}/> : <></> }
-            { stage ? <ResultsTabs abbrv={raceRow!.get('Abb') } stage={stage} /> : <></> }
+            { stage ? <ResultsTabs oneDay={numStages<2} abbrv={raceRow!.get('Abb') } stage={stage} /> : <></> }
         </div>
     )
 };

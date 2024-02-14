@@ -40,23 +40,34 @@ export const getRaceMetaData = async () => {
     return calender.getRows();
 };
 
-export const getResultSheet = async (abbrv:string) => {
+const getbaseResultSheet = async (abbrv:string) => {
     const doc=await getDbStandings();
-    return doc.sheetsByTitle[abbrv].getRows();
+    return doc.sheetsByTitle[abbrv];
+};
+
+export const getResultSheet = async (abbrv:string) => {
+    return (await getbaseResultSheet(abbrv)).getRows();
 };
 
 export const getTTTCells = async (abbrv:string) => {
-    const doc=await getDbStandings();
-    const sheet=doc.sheetsByTitle[abbrv];
-    await sheet.loadCells();
+    const doc=await getbaseResultSheet(abbrv);
+    await doc.loadCells();
     
     let teamCells=[];
     for(let i=3;i<25;i+=5) {
-        teamCells.push(sheet.getCellByA1(`AF${i}`).value)
+        teamCells.push(doc.getCellByA1(`AF${i}`).value)
     }
-    
+
     return teamCells;
 }
+
+export const getGcOneDay = async (abbrv:string) => {
+    const doc=(await getResultSheet(abbrv)).slice(1,41);
+    
+    return doc.map((row)=> {
+        return row.get('Classements / One-day results');
+    })
+};
 
 //race days endpoints
 export const getRaceDays = async (level:string) => {
