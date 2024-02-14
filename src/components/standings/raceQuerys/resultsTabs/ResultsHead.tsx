@@ -25,12 +25,25 @@ const headCells: readonly HeadCell[] = [
         numeric: false,
         disablePadding:false,
         label:"Rider"
-    }
+    },
+    {
+        id:'team',
+        numeric: false,
+        disablePadding:false,
+        label:"Team"
+    },
+    {
+        id:'points',
+        numeric: false,
+        disablePadding:false,
+        label:"Uci Points"
+    },
 ]
 
 interface EnhancedTableProps {
     order: Order;
     orderBy: string;
+    tttStage: boolean;
 }
 
 const ResultsHead = (props: EnhancedTableProps) => {

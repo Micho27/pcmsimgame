@@ -1,10 +1,9 @@
-import { useState, useEffect, useMemo } from "react"
+import { useEffect, useState } from "react"
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableContainer from '@mui/material/TableContainer';
 import Paper from '@mui/material/Paper';
-import { GoogleSpreadsheetRow } from "google-spreadsheet";
-import { Order, TeamLevels } from "../../../../commonTypes";
+import { Order } from "../../../../commonTypes";
 import LoadingScreen from "../../LoadingScreen";
 import { RiderStandingsHeader } from "../../riderStandings/RiderStandingsHead";
 import { StyledTableRow } from "../../teamStandings/TeamUtils";
@@ -12,7 +11,7 @@ import { TableCell } from "@mui/material";
 import ResultsHead from "./ResultsHead";
 
 interface ResultsTableProps {
-    data:Array<string>;
+    data:Array<any>;
 };
 
 const ResultsTable = (props:ResultsTableProps) => {
@@ -29,14 +28,17 @@ const ResultsTable = (props:ResultsTableProps) => {
                     <ResultsHead 
                         order={order}
                         orderBy={orderBy}
+                        tttStage
                     />
                     <TableBody>
                         {
-                            data.map((rider,index) => {
+                            data.map((row,index) => {
                                 return (
                                     <StyledTableRow>
                                         <TableCell>{index+1}</TableCell>
-                                        <TableCell>{rider}</TableCell>
+                                        <TableCell>{row.rider}</TableCell>
+                                        <TableCell>{row.team}</TableCell>
+                                        <TableCell>{row.points}</TableCell>
                                     </StyledTableRow>
                                 )
                             })
