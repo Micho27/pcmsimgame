@@ -91,10 +91,10 @@ const ResultsTabs = (props:ResultsTabsProps) => {
                   indicatorColor="secondary"
                   aria-label="secondary tabs example">
                     <Tab label={noProvisional ? "Final GC" : "Stage Result"} />
-                    <Tab label={noProvisional ? "Final Youth" : "Provisional GC"} />
-                    <Tab label={noProvisional ? "Final Points" : "Provisional Youth"} />
-                    <Tab label={noProvisional ? "Final KOM" : "Provisional Points"} />
-                    {noProvisional ? <></>: <Tab label="Provisional KOM" />}
+                    <Tab label={noProvisional ? "Final Youth" : "Provisional GC"} disabled/>
+                    <Tab label={noProvisional ? "Final Points" : "Provisional Youth"} disabled/>
+                    <Tab label={noProvisional ? "Final KOM" : "Provisional Points"} disabled/>
+                    {noProvisional ? <></>: <Tab label="Provisional KOM" disabled/>}
               </Tabs>
             </Box>
             <StandingsTabPanel value={value} index={0}>
