@@ -1,6 +1,4 @@
-import { GoogleSpreadsheetWorksheet } from "google-spreadsheet";
 import { getDbDays, getDbStandings } from "./db"
-import { refType } from "@mui/utils";
 
 //gid to grab race days
 const wtRaceDaysGid:number=+process.env.REACT_APP_SHEETS_GID_WT_RACE_DAYS!;
@@ -11,9 +9,6 @@ const ctRaceDaysGid:number=+process.env.REACT_APP_SHEETS_GID_CT_RACE_DAYS!;
 const teamStandingsGid:number=+process.env.REACT_APP_SHEETS_GID_TEAM_STANDINGS!;
 const riderStandingsGid:number=+process.env.REACT_APP_SHEETS_GID_RIDER_STANDINGS!;
 const nationStandingsGid:number=+process.env.REACT_APP_SHEETS_GID_NATION_STANDINGS!;
-
-//useful list of non race sheets in the standings spreadsheet
-const nonRaces=["Nations Standings","Info","Points","Team Standings","Template","Tutorial"];
 
 //standings endpoints
 export const getTeamStanding = async () => {
@@ -42,31 +37,44 @@ export const getRaceMetaData = async () => {
 
 const getbaseResultSheet = async (abbrv:string) => {
     const doc=await getDbStandings();
-    return doc.sheetsByTitle[abbrv];
+    const raceSheet = doc.sheetsByTitle[abbrv];
+    await raceSheet.loadHeaderRow(238);
+    return await raceSheet.getRows({offset:-237});
 };
 
-export const getResultSheet = async (abbrv:string) => {
-    return (await getbaseResultSheet(abbrv)).getRows();
-};
-
-export const getTTTCells = async (abbrv:string) => {
-    const doc=await getbaseResultSheet(abbrv);
-    await doc.loadCells();
+export const getStageResultSheet = async (abbrv:string) => {
+    const doc = await getbaseResultSheet(abbrv);
     
-    let teamCells=[];
-    for(let i=3;i<25;i+=5) {
-        teamCells.push(doc.getCellByA1(`AF${i}`).value)
-    }
+    return doc.map((row)=> {
+        return {
+            rider: row.get('stageRiderName'),
+            team: row.get('stageTeam'),
+            points: row.get('stagePoints')
+        }
+    })
+};
 
-    return teamCells;
+export const getTTTStage = async (abbrv:string) => {
+    const doc= await getbaseResultSheet(abbrv);
+    return doc.map((row)=> {
+        return {
+            rider: row.get('tttRider'),
+            team: row.get('tttTeam'),
+            points: row.get('tttPoints')*5
+        }
+    });
 }
 
 export const getGcOneDay = async (abbrv:string) => {
-    const doc=(await getResultSheet(abbrv)).slice(1,41);
+    const doc= await getbaseResultSheet(abbrv);
     
     return doc.map((row)=> {
-        return row.get('Classements / One-day results');
-    })
+        return {
+            rider: row.get('finalRider'),
+            team: row.get('finalTeam'),
+            points: row.get('finalPoints')
+        }
+    }).slice(1,51);
 };
 
 //race days endpoints

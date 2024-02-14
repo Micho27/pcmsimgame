@@ -4,8 +4,7 @@ import Box from "@mui/material/Box";
 import { useEffect, useState } from 'react';
 import Typography from '@mui/material/Typography';
 import { TabPanelProps } from '../../../../commonTypes';
-import { getGcOneDay, getResultSheet, getTTTCells } from '../../../../services/dbActions';
-import { GoogleSpreadsheetRow } from 'google-spreadsheet';
+import { getGcOneDay, getStageResultSheet, getTTTStage } from '../../../../services/dbActions';
 import ResultsTable from './ResultsTable';
 
 interface ResultsTabsProps {
@@ -14,6 +13,11 @@ interface ResultsTabsProps {
     oneDay:boolean;
 }
 
+interface ResultsTableObject {
+  rider:string;
+  team:string;
+  points:number;
+}
 const  StandingsTabPanel = (props: TabPanelProps) => {
     const { children, value, index, ...other } = props;
   
@@ -38,9 +42,9 @@ const ResultsTabs = (props:ResultsTabsProps) => {
     const { oneDay, abbrv, stage } = props;
     const [value, setValue] = useState(0);
     const [loading,setLoading] = useState(false);
-    const [raceSheet,setRaceSheet] = useState<Array<GoogleSpreadsheetRow>>([]);
-    const [TTTCells,setTTTCells] = useState<Array<string>>([]);
-    const [GcResult,setGcResult] = useState<Array<any>>([]);
+    const [stageResults,setStageResults] = useState<Array<ResultsTableObject>>([]);
+    const [tttResult,setTTTResult] = useState<Array<any>>([]);
+    const [GcResult,setGcResult] = useState<Array<ResultsTableObject>>([]);
     
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
       setValue(newValue);
@@ -49,12 +53,12 @@ const ResultsTabs = (props:ResultsTabsProps) => {
     const fetchRaceSheet = async () => {
         setLoading(true)
 
-        const resRace: Array<GoogleSpreadsheetRow> = await getResultSheet(abbrv);
-        const resCells: Array<any> = await getTTTCells(abbrv);
-        const resGc:Array<any> = await getGcOneDay(abbrv);
+        const resRace: Array<ResultsTableObject> = await getStageResultSheet(abbrv);
+        const resCells: Array<ResultsTableObject> = await getTTTStage(abbrv);
+        const resGc:Array<ResultsTableObject> = await getGcOneDay(abbrv);
 
-        setRaceSheet([...resRace]);
-        setTTTCells([...resCells]);
+        setStageResults([...resRace]);
+        setTTTResult([...resCells]);
         setGcResult([...resGc]);
         setLoading(false);
     };
@@ -64,24 +68,26 @@ const ResultsTabs = (props:ResultsTabsProps) => {
         fetchRaceSheet();
     }, []);
 
+    let tttStage:boolean=false;;
     const getStageResult = () => {
-        const start = (stage-1)*10 + stage;
-        
-        let results= raceSheet!.map((row) => {
-            return row.get('Stages')
-        }).slice(start,start+10);
-      
+        tttStage=false;
+        const start=(stage-1)*10+stage;
+        const results = stageResults.slice(start,start+10);
+
         if(noProvisional) {
           return GcResult;
         }
 
-        if(results[0] === '') {
-           return TTTCells;
+        if(results[0] && results[0].rider === '') {
+            tttStage=true;
+            return tttResult.reduce((prev, {rider, team, points}) => 
+              prev.some((x: { team: any; }) => x.team === team)? prev: [...prev, {rider, team, points} ], []).slice(1,6);
         }
 
         return results
     };
 
+    const data=getStageResult();
     return (
         <Box sx={{ width: '100%' }} >
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -98,7 +104,7 @@ const ResultsTabs = (props:ResultsTabsProps) => {
               </Tabs>
             </Box>
             <StandingsTabPanel value={value} index={0}>
-                <ResultsTable data={getStageResult()}/>
+                <ResultsTable data={data} />
             </StandingsTabPanel>
         </Box>
     )
