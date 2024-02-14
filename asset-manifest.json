@@ -1,14 +1,14 @@
 {
   "files": {
-    "main.css": "/pcmsimgame/static/css/main.4c9662e3.css",
-    "main.js": "/pcmsimgame/static/js/main.31c51600.js",
+    "main.css": "/pcmsimgame/static/css/main.2106a6be.css",
+    "main.js": "/pcmsimgame/static/js/main.48cfff0a.js",
     "static/media/PCM_SimGame_Picture.png": "/pcmsimgame/static/media/PCM_SimGame_Picture.e485ee31d872af9e727e.png",
     "index.html": "/pcmsimgame/index.html",
-    "main.4c9662e3.css.map": "/pcmsimgame/static/css/main.4c9662e3.css.map",
-    "main.31c51600.js.map": "/pcmsimgame/static/js/main.31c51600.js.map"
+    "main.2106a6be.css.map": "/pcmsimgame/static/css/main.2106a6be.css.map",
+    "main.48cfff0a.js.map": "/pcmsimgame/static/js/main.48cfff0a.js.map"
   },
   "entrypoints": [
-    "static/css/main.4c9662e3.css",
-    "static/js/main.31c51600.js"
+    "static/css/main.2106a6be.css",
+    "static/js/main.48cfff0a.js"
   ]
 }
