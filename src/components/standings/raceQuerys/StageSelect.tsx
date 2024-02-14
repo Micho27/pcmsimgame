@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -19,6 +19,10 @@ const StageSelect = (props:StageSelectProps) => {
         setStage(+event.target.value);
     };
 
+    useEffect(()=>{
+        setselectedStage('');
+    },[numStages]);
+
     return (
         <Box sx={{ minWidth: 120, margin:'10px' }}>
             <FormControl fullWidth>
@@ -36,6 +40,9 @@ const StageSelect = (props:StageSelectProps) => {
                                 <MenuItem value={i+1}>{'Stage '+ (i+1)}</MenuItem>
                             )
                         })
+                    }
+                    {
+                        numStages > 1 ? <MenuItem value={69}>{'Final Standings'}</MenuItem> : <></>
                     }
                 </Select>
             </FormControl>

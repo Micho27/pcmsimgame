@@ -16,14 +16,14 @@ const RaceQueryContainer = () => {
 
     return (
         <div>
-            <p> 
-                Be Gentle I haven't out crash protection in yet if you select a race that hasn't been updated in the standings 
-                then the site will crash. Just refresh and try again.
+            <p style={{color:"black"}}> 
+                Be Gentle I haven't put in crash protection yet if you select a race that hasn't been updated in the standings 
+                then the site will crash. Just refresh and try again a race that has been calculated. <br></br>
                 Last Race: Clasica de Almeria
             </p>
             <RaceSelect setRaceRow={setRaceRow}/>
             { raceRow ? <StageSelect numStages={numStages} setStage={setStage}/> : <></> }
-            { stage ? <ResultsTabs abbrv={raceRow!.get('Abb') } stage={stage} /> : <></> }
+            { stage ? <ResultsTabs oneDay={numStages<2} abbrv={raceRow!.get('Abb') } stage={stage} /> : <></> }
         </div>
     )
 };
