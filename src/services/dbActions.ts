@@ -15,6 +15,7 @@ const nationStandingsGid:number=+process.env.REACT_APP_SHEETS_GID_NATION_STANDIN
 //useful list of non race sheets in the standings spreadsheet
 const nonRaces=["Nations Standings","Info","Points","Team Standings","Template","Tutorial"];
 
+//standings endpoints
 export const getTeamStanding = async () => {
     const doc=await getDbStandings();
     return doc.sheetsById[teamStandingsGid].getRows({ offset: 2 });
@@ -25,13 +26,12 @@ export const getRiderStandings = async () => {
     return doc.sheetsById[riderStandingsGid].getRows({ offset: 2 });
 };
 
-const getRaceAbbrev = (sheets:any) => {
-    const hi = sheets.map((sheet:GoogleSpreadsheetWorksheet) => {
-         return sheet.title;
-    });
-    return hi;
-}
+export const getNationStandings = async () => {
+    const doc=await getDbStandings();
+    return doc.sheetsById[nationStandingsGid].getRows({ offset: 1 });
+};
 
+//race query endpoints
 //grabs array of rows that have all race names/abbreviations/types/stages/level
 export const getRaceMetaData = async () => {
     const doc=await getDbStandings();
@@ -40,16 +40,25 @@ export const getRaceMetaData = async () => {
     return calender.getRows();
 };
 
-export const getNationStandings = async () => {
-    const doc=await getDbStandings();
-    return doc.sheetsById[nationStandingsGid].getRows({ offset: 1 });
-};
-
 export const getResultSheet = async (abbrv:string) => {
     const doc=await getDbStandings();
     return doc.sheetsByTitle[abbrv].getRows();
 };
 
+export const getTTTCells = async (abbrv:string) => {
+    const doc=await getDbStandings();
+    const sheet=doc.sheetsByTitle[abbrv];
+    await sheet.loadCells();
+    
+    let teamCells=[];
+    for(let i=3;i<25;i+=5) {
+        teamCells.push(sheet.getCellByA1(`AF${i}`).value)
+    }
+    
+    return teamCells;
+}
+
+//race days endpoints
 export const getRaceDays = async (level:string) => {
     const doc= await getDbDays();
     

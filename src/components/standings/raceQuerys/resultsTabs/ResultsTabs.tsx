@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import { useEffect, useState } from 'react';
 import Typography from '@mui/material/Typography';
 import { TabPanelProps } from '../../../../commonTypes';
-import { getResultSheet } from '../../../../services/dbActions';
+import { getResultSheet, getTTTCells } from '../../../../services/dbActions';
 import { GoogleSpreadsheetRow } from 'google-spreadsheet';
 import ResultsTable from './ResultsTable';
 
@@ -38,7 +38,7 @@ const ResultsTabs = (props:ResultsTabsProps) => {
     const [value, setValue] = useState(0);
     const [loading,setLoading] = useState(false);
     const [raceSheet,setRaceSheet] = useState<Array<GoogleSpreadsheetRow>>([]);
-
+    const [TTTCells,setTTTCells] = useState<Array<string>>([]);
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
       setValue(newValue);
     };
@@ -46,45 +46,51 @@ const ResultsTabs = (props:ResultsTabsProps) => {
     const fetchRaceSheet = async () => {
         setLoading(true)
 
-        const res: Array<GoogleSpreadsheetRow> = await getResultSheet(abbrv);
+        const resRace: Array<GoogleSpreadsheetRow> = await getResultSheet(abbrv);
+        const resCells: Array<any> = await getTTTCells(abbrv);
 
-        setRaceSheet([...res])
+        setRaceSheet([...resRace])
+        setTTTCells([...resCells]);
         setLoading(false)
     };
 
     useEffect(()=>{
-        console.log('useEffect');
         fetchRaceSheet();
     }, []);
-    
 
     const getStageResult = () => {
-        console.log('hello',raceSheet);
-        const results= raceSheet!.map((row) => {
-            return row.get('Stages')
-        });
-    
         const start = (stage-1)*10 + stage;
-        return results!.slice(start,start+10);
-    };
+        let tt;
+        let results= raceSheet!.map((row) => {
+            return row.get('Stages')
+        }).slice(start,start+10);
+        
+        if(results[0] === '') {
+           return TTTCells;
+        }
 
+        return results
+    };
+    const data=getStageResult();
+    console.log(data);
+    
     return (
         <Box sx={{ width: '100%' }} >
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-              <Tabs value={value} 
+              <Tabs value={value}
                   onChange={handleChange}
                   textColor="secondary"
                   indicatorColor="secondary"
                   aria-label="secondary tabs example">
                     <Tab label="Stage Result" />
-                    <Tab label="Provisional GC"/>
-                    <Tab label="Provisional Youth"/>
-                    <Tab label="Provisional Points"/>
-                    <Tab label="Provisional KOM"/>
+                    <Tab label="Provisional GC" disabled/>
+                    <Tab label="Provisional Youth" disabled/>
+                    <Tab label="Provisional Points" disabled/>
+                    <Tab label="Provisional KOM" disabled/>
               </Tabs>
             </Box>
             <StandingsTabPanel value={value} index={0}>
-                <ResultsTable data={getStageResult()}/>
+                <ResultsTable data={data}/>
             </StandingsTabPanel>
         </Box>
     )

@@ -54,7 +54,7 @@ const App = () => {
               aria-label="secondary tabs example">
             <Tab label="UCI Standings" />
             <Tab label="Rider race Days used" />
-            <Tab label="Query race results? maybe in future??!?" disabled/>
+            <Tab label="Race Results" />
           </Tabs>
         </Box>
         <CustomTabPanel value={value} index={0}>
