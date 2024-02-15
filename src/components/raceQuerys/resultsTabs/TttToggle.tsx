@@ -4,10 +4,14 @@ import { useSwitch, UseSwitchParameters } from '@mui/base/useSwitch';
 
 export const TttToggle = (props:any) => {
     const {toggleDetailedTTT} = props;
+
+    const handleToggle = () => {
+      toggleDetailedTTT();
+    }
     return (
         <div>
             <p>Toggle for detailed TTT results</p>
-            <BasicSwitch onChange={toggleDetailedTTT()} defaultChecked />
+            <BasicSwitch onChange={handleToggle} defaultChecked disabled/>
         </div>
     );
 }

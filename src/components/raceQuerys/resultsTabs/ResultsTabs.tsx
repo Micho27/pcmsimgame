@@ -1,13 +1,13 @@
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from "@mui/material/Box";
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { getbaseResultSheet } from '../../../services/dbActions';
 import ResultsTable from './ResultsTable';
 import { GoogleSpreadsheetRow } from 'google-spreadsheet';
-import { getFinalGc, getFinalYouth, getProvisionalGc, getStage, getTTTStageDetailed, getTttStage } from '../../standings/raceQuerys/resultsTabs/resultsUtils';
+import { getFinalGc, getFinalYouth, getProvisionalGc, getStage, getTTTStageDetailed, getTttStage } from './resultsUtils';
 import LoadingScreen from '../../LoadingScreen';
-import { TttToggle } from '../../standings/raceQuerys/resultsTabs/TttToggle';
+import { TttToggle } from './TttToggle';
 import { StandingsTabPanel } from '../../StandingsTabPanel';
 
 interface ResultsTabsProps {
@@ -21,13 +21,22 @@ const ResultsTabs = (props:ResultsTabsProps) => {
     const [value, setValue] = useState(0);
     const [loading, setLoading] = useState(false);
     const [raceSheet, setRaceSheet] = useState<Array<GoogleSpreadsheetRow>>([]);
-    const [tttStage, setTttStage] = useState(false);
-    const [detailedTTT, setDetailedTTT] = useState(false);
+    let detailedTTT = false;
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
       setValue(newValue);
     };
-    const toggleDetailedTTT = () => setDetailedTTT(!detailedTTT);
+
+    const toggleDetailedTTT = () => {
+      detailedTTT = !detailedTTT;
+      data = getStageResult();
+    };
+
+    useMemo(() => {
+        setLoading(true)
+
+        setLoading(false);
+    },[detailedTTT]);
 
     const fetchRaceSheet = async () => {
         setLoading(true)
@@ -42,17 +51,6 @@ const ResultsTabs = (props:ResultsTabsProps) => {
     useEffect(()=>{
         fetchRaceSheet();
     }, []);
-
-    useEffect(()=>{
-        const start=(stage-1)*10+stage;
-        const results = [raceSheet[start]];
-        
-        if(results[0] && getStage(results)[0].rider === '') {
-          setTttStage(true);
-        } else {
-          setTttStage(false);
-        }
-    }, [stage]);
 
     const getStageResult = () => {
       //formula to jump down the stage results and grab only those rows
@@ -86,10 +84,11 @@ const ResultsTabs = (props:ResultsTabsProps) => {
       return getProvisionalGc(results);
     };
 
+    let data = getStageResult();
     return (
         loading ? <LoadingScreen /> :
         <Box sx={{ width: '100%' }} >
-            {tttStage ? <TttToggle toggleDetailedTTT={toggleDetailedTTT} />:<></>}
+            <TttToggle toggleDetailedTTT={toggleDetailedTTT} />
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
               <Tabs value={value}
                   onChange={handleChange}
@@ -104,7 +103,7 @@ const ResultsTabs = (props:ResultsTabsProps) => {
               </Tabs>
             </Box>
             <StandingsTabPanel value={value} index={0}>
-                <ResultsTable data={ getStageResult() } />
+                <ResultsTable detailed={detailedTTT} data={ data } />
             </StandingsTabPanel>
             <StandingsTabPanel value={value} index={1}>
               <ResultsTable data={ getYouthProGc() } />
