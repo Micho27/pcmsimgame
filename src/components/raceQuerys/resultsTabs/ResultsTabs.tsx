@@ -66,7 +66,7 @@ const ResultsTabs = (props:ResultsTabsProps) => {
               return getTTTStageDetailed(raceSheet);
             }
             
-            const res:Array<any> = getTttStage(raceSheet)
+            const res:Array<any> = getTttStage(raceSheet);
             return res.reduce((prev, {rider, team, points}) => 
               prev.some((x: { team: any; }) => x.team === team)? prev: [...prev, {rider, team, points} ], []);
             }
@@ -89,16 +89,16 @@ const ResultsTabs = (props:ResultsTabsProps) => {
         if(stage === 69) {
           return getFinalPoints(raceSheet);
         }
-
-        return getProvisionalYouth([raceSheet[provisionalSkip]]);
+        
+        return raceSheet.length > 2 ? getProvisionalYouth([raceSheet[provisionalSkip]]): [];
     };
 
     const getKomProPoints = () => {
       if(stage === 69) {
         return getFinalKOM(raceSheet);
       }
-
-      return getProvisionalPoints([raceSheet[provisionalSkip]]);
+      
+      return raceSheet.length > 2 ? getProvisionalPoints([raceSheet[provisionalSkip]]) : [];
     };
 
     let data = getStageResult();
@@ -132,7 +132,7 @@ const ResultsTabs = (props:ResultsTabsProps) => {
               <ResultsTable data={ getKomProPoints() } />
             </StandingsTabPanel>
             <StandingsTabPanel value={value} index={4}>
-              <ResultsTable data={ getProvisionalKom([raceSheet[provisionalSkip]]) } />
+              <ResultsTable data={ raceSheet.length > 2 ? getProvisionalKom([raceSheet[provisionalSkip]]): [] } />
             </StandingsTabPanel>
         </Box>
     )
