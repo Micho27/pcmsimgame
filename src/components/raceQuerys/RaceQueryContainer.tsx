@@ -3,6 +3,7 @@ import RaceSelect from "./RaceSelect";
 import StageSelect from "./StageSelect";
 import { GoogleSpreadsheetRow } from "google-spreadsheet";
 import ResultsTabs from "./resultsTabs/ResultsTabs";
+import { lastRace } from "../../commonTypes";
 
 const RaceQueryContainer = () => {
     const [raceRow,setRaceRow]=useState<GoogleSpreadsheetRow | undefined>(undefined);
@@ -17,9 +18,8 @@ const RaceQueryContainer = () => {
     return (
         <div style={{color:"black"}}>
             <p> 
-                Be Gentle I haven't put in crash protection yet if you select a race that hasn't been updated in the standings 
-                then the site will crash. Just refresh and try again with a race that has been calculated. <br></br>
-                Last Race: Clasica de Almeria
+                A place to query any results that have been added to the standings database.
+                Last Race Calculated: {lastRace}
             </p>
             <RaceSelect setRaceRow={setRaceRow}/>
             { raceRow ? <StageSelect numStages={numStages} setStage={setStage}/> : <></> }

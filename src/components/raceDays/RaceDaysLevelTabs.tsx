@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import RaceDaysTable from './RaceDaysTable';
 import { useState } from 'react';
 import Typography from '@mui/material/Typography';
-import { TabPanelProps } from '../../commonTypes';
+import { TabPanelProps, lastRace } from '../../commonTypes';
 
 const  RaceDaysTabPanel = (props: TabPanelProps) => {
     const { children, value, index, ...other } = props;
@@ -36,7 +36,7 @@ const RaceDaysLevelTabs = () => {
     return (
         <Box sx={{ width: '100%', color:'black' }} >
             <p>
-                Last updated after Clasica de Almeria
+                Last Race Calculated: {lastRace}
             </p>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
               <Tabs value={value} 

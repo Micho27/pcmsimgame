@@ -6,6 +6,7 @@ import { useState } from 'react';
 import RiderStandingsTable from './riderStandings/RiderStandingsTable';
 import NationStandingsTable from './nationsStandings/NationStandingsTable';
 import { StandingsTabPanel } from '../StandingsTabPanel';
+import { lastRace } from '../../commonTypes';
 
 const UciStandingsTabs = () => {
     const [value, setValue] = useState(0);
@@ -17,7 +18,7 @@ const UciStandingsTabs = () => {
     return (
         <Box sx={{ width: '100%', color: 'black' }} >
             <p>
-                Last updated after Clasica de Almeria
+                Last Race Calculated: {lastRace}
             </p>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
               <Tabs value={value} 
