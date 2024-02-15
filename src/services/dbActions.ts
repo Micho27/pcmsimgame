@@ -35,46 +35,11 @@ export const getRaceMetaData = async () => {
     return calender.getRows();
 };
 
-const getbaseResultSheet = async (abbrv:string) => {
+export const getbaseResultSheet = async (abbrv:string) => {
     const doc=await getDbStandings();
     const raceSheet = doc.sheetsByTitle[abbrv];
     await raceSheet.loadHeaderRow(238);
     return await raceSheet.getRows({offset:-237});
-};
-
-export const getStageResultSheet = async (abbrv:string) => {
-    const doc = await getbaseResultSheet(abbrv);
-    
-    return doc.map((row)=> {
-        return {
-            rider: row.get('stageRiderName'),
-            team: row.get('stageTeam'),
-            points: row.get('stagePoints')
-        }
-    })
-};
-
-export const getTTTStage = async (abbrv:string) => {
-    const doc= await getbaseResultSheet(abbrv);
-    return doc.map((row)=> {
-        return {
-            rider: row.get('tttRider'),
-            team: row.get('tttTeam'),
-            points: row.get('tttPoints')*5
-        }
-    });
-}
-
-export const getGcOneDay = async (abbrv:string) => {
-    const doc= await getbaseResultSheet(abbrv);
-    
-    return doc.map((row)=> {
-        return {
-            rider: row.get('finalRider'),
-            team: row.get('finalTeam'),
-            points: row.get('finalPoints')
-        }
-    }).slice(1,51);
 };
 
 //race days endpoints

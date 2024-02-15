@@ -36,7 +36,10 @@ const UciStandingsTabs = () => {
     };
     
     return (
-        <Box sx={{ width: '100%' }} >
+        <Box sx={{ width: '100%', color: 'black' }} >
+            <p>
+                Last updated after Clasica de Almeria
+            </p>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
               <Tabs value={value} 
                   onChange={handleChange}
