@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableContainer from '@mui/material/TableContainer';
@@ -12,14 +12,21 @@ import ResultsHead from "./ResultsHead";
 
 interface ResultsTableProps {
     data:Array<any>;
+    detailed?:boolean;
 };
 
 const ResultsTable = (props:ResultsTableProps) => {
-    const { data } = props;
+    const { data, detailed} = props;
     const [order, setOrder] = useState<Order>('desc');
     const [orderBy, setOrderBy] = useState<keyof RiderStandingsHeader>('teamPoints');
     const [loading, setLoading] = useState(false);
     
+    useMemo(() => {
+        setLoading(true);
+        console.log('hi');
+        setLoading(false);
+    },[detailed]);
+
     return (
         loading ? <LoadingScreen /> :
         <>
