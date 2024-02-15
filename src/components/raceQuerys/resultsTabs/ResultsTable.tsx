@@ -23,7 +23,6 @@ const ResultsTable = (props:ResultsTableProps) => {
     
     useMemo(() => {
         setLoading(true);
-        console.log('hi');
         setLoading(false);
     },[detailed]);
 
