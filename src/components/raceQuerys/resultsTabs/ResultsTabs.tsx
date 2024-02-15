@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { getbaseResultSheet } from '../../../services/dbActions';
 import ResultsTable from './ResultsTable';
 import { GoogleSpreadsheetRow } from 'google-spreadsheet';
-import { getFinalGc, getFinalYouth, getProvisionalGc, getStage, getTTTStageDetailed, getTttStage } from './resultsUtils';
+import { getFinalGc, getFinalKOM, getFinalPoints, getFinalYouth, getProvisionalGc, getProvisionalKom, getProvisionalPoints, getProvisionalYouth, getStage, getTTTStageDetailed, getTttStage } from './resultsUtils';
 import LoadingScreen from '../../LoadingScreen';
 import { TttToggle } from './TttToggle';
 import { StandingsTabPanel } from '../../StandingsTabPanel';
@@ -84,6 +84,23 @@ const ResultsTabs = (props:ResultsTabsProps) => {
       return getProvisionalGc(results);
     };
 
+    const provisionalSkip=(stage-1)*2+1;
+    const getPointsProYouth = () => {
+        if(stage === 69) {
+          return getFinalPoints(raceSheet);
+        }
+
+        return getProvisionalYouth([raceSheet[provisionalSkip]]);
+    };
+
+    const getKomProPoints = () => {
+      if(stage === 69) {
+        return getFinalKOM(raceSheet);
+      }
+
+      return getProvisionalPoints([raceSheet[provisionalSkip]]);
+    };
+
     let data = getStageResult();
     return (
         loading ? <LoadingScreen /> :
@@ -97,9 +114,9 @@ const ResultsTabs = (props:ResultsTabsProps) => {
                   aria-label="secondary tabs example">
                     <Tab label={noProvisional ? oneDay ? "One Day Result" : "Final GC" : "Stage Result"} />
                     {oneDay ? <></> :<Tab label={noProvisional ? "Final Youth" : "Provisional GC"}/>}
-                    {oneDay ? <></> :<Tab label={noProvisional ? "Final Points" : "Provisional Youth"} disabled/>}
-                    {oneDay ? <></> :<Tab label={noProvisional ? "Final KOM" : "Provisional Points"} disabled/>}
-                    {noProvisional ? <></> : <Tab label="Provisional KOM" disabled/>}
+                    {oneDay ? <></> :<Tab label={noProvisional ? "Final Points" : "Provisional Youth"} />}
+                    {oneDay ? <></> :<Tab label={noProvisional ? "Final KOM" : "Provisional Points"}/>}
+                    {noProvisional ? <></> : <Tab label="Provisional KOM" />}
               </Tabs>
             </Box>
             <StandingsTabPanel value={value} index={0}>
@@ -107,6 +124,15 @@ const ResultsTabs = (props:ResultsTabsProps) => {
             </StandingsTabPanel>
             <StandingsTabPanel value={value} index={1}>
               <ResultsTable data={ getYouthProGc() } />
+            </StandingsTabPanel>
+            <StandingsTabPanel value={value} index={2}>
+              <ResultsTable data={ getPointsProYouth() } />
+            </StandingsTabPanel>
+            <StandingsTabPanel value={value} index={3}>
+              <ResultsTable data={ getKomProPoints() } />
+            </StandingsTabPanel>
+            <StandingsTabPanel value={value} index={4}>
+              <ResultsTable data={ getProvisionalKom([raceSheet[provisionalSkip]]) } />
             </StandingsTabPanel>
         </Box>
     )
