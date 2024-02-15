@@ -4,8 +4,12 @@ import Box from "@mui/material/Box";
 import { useEffect, useState } from 'react';
 import Typography from '@mui/material/Typography';
 import { TabPanelProps } from '../../../../commonTypes';
-import { getGcOneDay, getStageResultSheet, getTTTStage } from '../../../../services/dbActions';
+import { getbaseResultSheet } from '../../../../services/dbActions';
 import ResultsTable from './ResultsTable';
+import { GoogleSpreadsheetRow } from 'google-spreadsheet';
+import { getFinalGc, getFinalYouth, getProvisionalGc, getStage, getTttStage } from './resultsUtils';
+import LoadingScreen from '../../LoadingScreen';
+import { TttToggle } from './TttToggle';
 
 interface ResultsTabsProps {
     abbrv:string;
@@ -13,11 +17,6 @@ interface ResultsTabsProps {
     oneDay:boolean;
 }
 
-interface ResultsTableObject {
-  rider:string;
-  team:string;
-  points:number;
-}
 const  StandingsTabPanel = (props: TabPanelProps) => {
     const { children, value, index, ...other } = props;
   
@@ -42,10 +41,9 @@ const ResultsTabs = (props:ResultsTabsProps) => {
     const { oneDay, abbrv, stage } = props;
     const [value, setValue] = useState(0);
     const [loading,setLoading] = useState(false);
-    const [stageResults,setStageResults] = useState<Array<ResultsTableObject>>([]);
-    const [tttResult,setTTTResult] = useState<Array<any>>([]);
-    const [GcResult,setGcResult] = useState<Array<ResultsTableObject>>([]);
-    
+    const [raceSheet,setRaceSheet] = useState<Array<GoogleSpreadsheetRow>>([]);
+    const [tttStage,setTttStage] = useState(false);
+
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
       setValue(newValue);
     };
@@ -53,13 +51,9 @@ const ResultsTabs = (props:ResultsTabsProps) => {
     const fetchRaceSheet = async () => {
         setLoading(true)
 
-        const resRace: Array<ResultsTableObject> = await getStageResultSheet(abbrv);
-        const resCells: Array<ResultsTableObject> = await getTTTStage(abbrv);
-        const resGc:Array<ResultsTableObject> = await getGcOneDay(abbrv);
+        const res: Array<GoogleSpreadsheetRow> = await getbaseResultSheet(abbrv);
 
-        setStageResults([...resRace]);
-        setTTTResult([...resCells]);
-        setGcResult([...resGc]);
+        setRaceSheet([...res]);
         setLoading(false);
     };
 
@@ -68,43 +62,59 @@ const ResultsTabs = (props:ResultsTabsProps) => {
         fetchRaceSheet();
     }, []);
 
-    let tttStage:boolean=false;;
     const getStageResult = () => {
-        tttStage=false;
+      //formula to jump down the stage results and grab only those rows
         const start=(stage-1)*10+stage;
-        const results = stageResults.slice(start,start+10);
+        const results = raceSheet.slice(start,start+10);
 
         if(noProvisional) {
-          return GcResult;
+          return getFinalGc(raceSheet);
         }
 
-        if(results[0] && results[0].rider === '') {
-            tttStage=true;
-            return tttResult.reduce((prev, {rider, team, points}) => 
+        if(results[0] && results[0].get('stageRiderName') === '') {
+            //setTttStage(true);
+            const res:Array<any> = getTttStage(raceSheet)
+            return res.reduce((prev, {rider, team, points}) => 
               prev.some((x: { team: any; }) => x.team === team)? prev: [...prev, {rider, team, points} ], []).slice(1,6);
         }
 
-        return results
+        //setTttStage(false);
+        return getStage(results);
     };
 
-    const data=getStageResult();
+    const getYouthProGc = () => {
+      if(stage === 69) {
+        return getFinalYouth(raceSheet);
+      }
+
+      //formula to jump down the provisional gc results and grab only those rows
+      const start=(stage-1)*5+stage;
+      const results = raceSheet.slice(start,start+5);
+      return getProvisionalGc(results);
+    };
+
     return (
+        loading ? <LoadingScreen /> :
         <Box sx={{ width: '100%' }} >
+            {tttStage ? <TttToggle />:<></>}
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
               <Tabs value={value}
                   onChange={handleChange}
                   textColor="secondary"
                   indicatorColor="secondary"
                   aria-label="secondary tabs example">
-                    <Tab label={noProvisional ? "Final GC" : "Stage Result"} />
-                    <Tab label={noProvisional ? "Final Youth" : "Provisional GC"} disabled/>
-                    <Tab label={noProvisional ? "Final Points" : "Provisional Youth"} disabled/>
-                    <Tab label={noProvisional ? "Final KOM" : "Provisional Points"} disabled/>
-                    {noProvisional ? <></>: <Tab label="Provisional KOM" disabled/>}
+                    <Tab label={noProvisional ? oneDay ? "One Day Result" : "Final GC" : "Stage Result"} />
+                    {oneDay ? <></> :<Tab label={noProvisional ? "Final Youth" : "Provisional GC"}/>}
+                    {oneDay ? <></> :<Tab label={noProvisional ? "Final Points" : "Provisional Youth"} disabled/>}
+                    {oneDay ? <></> :<Tab label={noProvisional ? "Final KOM" : "Provisional Points"} disabled/>}
+                    {noProvisional ? <></> : <Tab label="Provisional KOM" disabled/>}
               </Tabs>
             </Box>
             <StandingsTabPanel value={value} index={0}>
-                <ResultsTable data={data} />
+                <ResultsTable data={ getStageResult() } />
+            </StandingsTabPanel>
+            <StandingsTabPanel value={value} index={1}>
+              <ResultsTable data={ getYouthProGc() } />
             </StandingsTabPanel>
         </Box>
     )

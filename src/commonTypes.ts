@@ -12,6 +12,12 @@ export interface TabPanelProps {
     value: number;
 }
 
+export interface ResultsTableObject {
+    rider:string;
+    team:string;
+    points:number;
+}
+
 export type Order = 'asc' | 'desc';
 export type TeamLevels = 'All' | 'wt' | 'pt' | 'ct';
 

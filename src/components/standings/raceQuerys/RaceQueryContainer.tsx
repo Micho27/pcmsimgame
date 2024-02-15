@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import RaceSelect from "./RaceSelect";
 import StageSelect from "./StageSelect";
 import { GoogleSpreadsheetRow } from "google-spreadsheet";
@@ -18,7 +18,7 @@ const RaceQueryContainer = () => {
         <div>
             <p style={{color:"black"}}> 
                 Be Gentle I haven't put in crash protection yet if you select a race that hasn't been updated in the standings 
-                then the site will crash. Just refresh and try again a race that has been calculated. <br></br>
+                then the site will crash. Just refresh and try again with a race that has been calculated. <br></br>
                 Last Race: Clasica de Almeria
             </p>
             <RaceSelect setRaceRow={setRaceRow}/>
