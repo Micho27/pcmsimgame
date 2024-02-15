@@ -10,7 +10,7 @@ import { getNationStandings } from '../../../services/dbActions';
 import { GoogleSpreadsheetRow } from "google-spreadsheet";
 import NationsHead, { NationsHeader } from "./NationsHead";
 import { Order, stableSort } from "../../../commonTypes";
-import LoadingScreen from "../LoadingScreen";
+import LoadingScreen from "../../LoadingScreen";
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {

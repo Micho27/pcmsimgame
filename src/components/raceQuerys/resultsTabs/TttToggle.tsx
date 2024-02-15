@@ -2,12 +2,14 @@ import clsx from 'clsx';
 import { styled } from '@mui/system';
 import { useSwitch, UseSwitchParameters } from '@mui/base/useSwitch';
 
-export const TttToggle = () => {
-  return (
-    <div>
-      <BasicSwitch defaultChecked />
-    </div>
-  );
+export const TttToggle = (props:any) => {
+    const {toggleDetailedTTT} = props;
+    return (
+        <div>
+            <p>Toggle for detailed TTT results</p>
+            <BasicSwitch onChange={toggleDetailedTTT()} defaultChecked />
+        </div>
+    );
 }
 
 function BasicSwitch(props: UseSwitchParameters) {

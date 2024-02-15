@@ -3,7 +3,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Box from '@mui/material/Box';
 import { visuallyHidden } from '@mui/utils';
-import { Order } from "../../../../commonTypes";
+import { Order } from "../../../commonTypes";
 
 interface HeadCell {
     disablePadding: boolean;
