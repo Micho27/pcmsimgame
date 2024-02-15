@@ -8,7 +8,7 @@ import { getRiderStandings } from '../../../services/dbActions';
 import { GoogleSpreadsheetRow } from "google-spreadsheet";
 import { Order, TeamLevels, stableSort } from "../../../commonTypes";
 import { getRiderRow } from "./RiderUtils";
-import LoadingScreen from "../LoadingScreen";
+import LoadingScreen from "../../LoadingScreen";
 import { LevelFilter } from "../LevelFilter";
 
 const RiderStandingsTable = () => {

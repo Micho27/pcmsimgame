@@ -10,7 +10,7 @@ import { Order, TeamLevels, stableSort } from "../../../commonTypes";
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import { getRow } from "./TeamUtils";
-import LoadingScreen from "../LoadingScreen";
+import LoadingScreen from "../../LoadingScreen";
 import { LevelFilter } from "../LevelFilter";
 
 export interface UciStandingsHeader {

@@ -2,34 +2,13 @@ import { useState } from "react"
 import logo from './PCM_SimGame_Picture.png';
 import './App.css';
 import UciStandingsTabs from './components/standings/UciStandingsTabs';
-import RaceDaysLevelTabs from "./components/standings/raceDays/RaceDaysLevelTabs";
+import RaceDaysLevelTabs from "./components/raceDays/RaceDaysLevelTabs";
 import Header from "./components/header/Header";
-import { TabPanelProps } from "./commonTypes";
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import RaceQueryContainer from "./components/standings/raceQuerys/RaceQueryContainer";
-
-const  CustomTabPanel = (props: TabPanelProps) => {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`home-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}
+import RaceQueryContainer from "./components/raceQuerys/RaceQueryContainer";
+import { StandingsTabPanel } from "./components/StandingsTabPanel";
 
 const App = () => {
   const [value, setValue] = useState(0);
@@ -57,15 +36,15 @@ const App = () => {
             <Tab label="Race Results" />
           </Tabs>
         </Box>
-        <CustomTabPanel value={value} index={0}>
+        <StandingsTabPanel value={value} index={0}>
           <UciStandingsTabs />
-        </CustomTabPanel>
-        <CustomTabPanel value={value} index={1}>
+        </StandingsTabPanel>
+        <StandingsTabPanel value={value} index={1}>
           <RaceDaysLevelTabs />
-        </CustomTabPanel>
-        <CustomTabPanel value={value} index={2}>
+        </StandingsTabPanel>
+        <StandingsTabPanel value={value} index={2}>
             <RaceQueryContainer />
-        </CustomTabPanel>
+        </StandingsTabPanel>
       </Box>
     </div>
   );

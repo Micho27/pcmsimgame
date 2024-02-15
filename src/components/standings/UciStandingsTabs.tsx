@@ -3,30 +3,9 @@ import Tab from '@mui/material/Tab';
 import Box from "@mui/material/Box";
 import TeamStandingsTable from './teamStandings/TeamStandingsTable';
 import { useState } from 'react';
-import Typography from '@mui/material/Typography';
-import { TabPanelProps } from '../../commonTypes';
 import RiderStandingsTable from './riderStandings/RiderStandingsTable';
 import NationStandingsTable from './nationsStandings/NationStandingsTable';
-
-const  StandingsTabPanel = (props: TabPanelProps) => {
-    const { children, value, index, ...other } = props;
-  
-    return (
-      <div
-        role="tabpanel"
-        hidden={value !== index}
-        id={`race-days-tabpanel-${index}`}
-        aria-labelledby={`simple-tab-${index}`}
-        {...other}
-      >
-        {value === index && (
-          <Box sx={{ p: 3 }}>
-            <Typography>{children}</Typography>
-          </Box>
-        )}
-      </div>
-    );
-  }
+import { StandingsTabPanel } from '../StandingsTabPanel';
 
 const UciStandingsTabs = () => {
     const [value, setValue] = useState(0);

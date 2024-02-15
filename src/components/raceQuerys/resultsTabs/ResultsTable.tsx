@@ -3,10 +3,10 @@ import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableContainer from '@mui/material/TableContainer';
 import Paper from '@mui/material/Paper';
-import { Order } from "../../../../commonTypes";
+import { Order } from "../../../commonTypes";
 import LoadingScreen from "../../LoadingScreen";
-import { RiderStandingsHeader } from "../../riderStandings/RiderStandingsHead";
-import { StyledTableRow } from "../../teamStandings/TeamUtils";
+import { RiderStandingsHeader } from "../../standings/riderStandings/RiderStandingsHead";
+import { StyledTableRow } from "../../standings/teamStandings/TeamUtils";
 import { TableCell } from "@mui/material";
 import ResultsHead from "./ResultsHead";
 
