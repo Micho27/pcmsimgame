@@ -10,7 +10,10 @@ export const TttToggle = (props:any) => {
     }
     return (
         <div>
-            <p>Toggle for detailed TTT results</p>
+            <p>
+                Toggle for detailed TTT results
+                NOTE: Displays on non TTT stages but only has effect on TTT stages.
+            </p>
             <BasicSwitch onChange={handleToggle} defaultChecked disabled/>
         </div>
     );
