@@ -21,22 +21,17 @@ const ResultsTabs = (props:ResultsTabsProps) => {
     const [value, setValue] = useState(0);
     const [loading, setLoading] = useState(false);
     const [raceSheet, setRaceSheet] = useState<Array<GoogleSpreadsheetRow>>([]);
-    let detailedTTT = false;
+    const [detailedTTT,setDetailedTTT] = useState(false);
+    let data;
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
       setValue(newValue);
     };
 
     const toggleDetailedTTT = () => {
-      detailedTTT = !detailedTTT;
-      data = getStageResult();
+      setDetailedTTT(!detailedTTT);
+      data=getStageResult();
     };
-
-    useMemo(() => {
-        setLoading(true)
-
-        setLoading(false);
-    },[detailedTTT]);
 
     const fetchRaceSheet = async () => {
         setLoading(true)
@@ -101,7 +96,7 @@ const ResultsTabs = (props:ResultsTabsProps) => {
       return raceSheet.length > 2 ? getProvisionalPoints([raceSheet[provisionalSkip]]) : [];
     };
 
-    let data = getStageResult();
+    data = getStageResult();
     return (
         loading ? <LoadingScreen /> :
         <Box sx={{ width: '100%' }} >
@@ -113,14 +108,14 @@ const ResultsTabs = (props:ResultsTabsProps) => {
                   indicatorColor="secondary"
                   aria-label="secondary tabs example">
                     <Tab label={noProvisional ? oneDay ? "One Day Result" : "Final GC" : "Stage Result"} />
-                    {oneDay ? <></> :<Tab label={noProvisional ? "Final Youth" : "Provisional GC"}/>}
+                    {oneDay ? <></> :<Tab label={noProvisional ? "Final Youth" : "Provisional GC"}/ >}
                     {oneDay ? <></> :<Tab label={noProvisional ? "Final Points" : "Provisional Youth"} />}
-                    {oneDay ? <></> :<Tab label={noProvisional ? "Final KOM" : "Provisional Points"}/>}
+                    {oneDay ? <></> :<Tab label={noProvisional ? "Final KOM" : "Provisional Points"} />}
                     {noProvisional ? <></> : <Tab label="Provisional KOM" />}
               </Tabs>
             </Box>
             <StandingsTabPanel value={value} index={0}>
-                <ResultsTable detailed={detailedTTT} data={ data } />
+                <ResultsTable data={ data } />
             </StandingsTabPanel>
             <StandingsTabPanel value={value} index={1}>
               <ResultsTable data={ getYouthProGc() } />
