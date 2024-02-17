@@ -12,23 +12,16 @@ import ResultsHead from "./ResultsHead";
 
 interface ResultsTableProps {
     data:Array<any>;
-    detailed?:boolean;
 };
 
 const ResultsTable = (props:ResultsTableProps) => {
-    const { data, detailed} = props;
+    const { data } = props;
     const [order, setOrder] = useState<Order>('desc');
     const [orderBy, setOrderBy] = useState<keyof RiderStandingsHeader>('teamPoints');
     const [loading, setLoading] = useState(false);
-    
-    useMemo(() => {
-        setLoading(true);
-        setLoading(false);
-    },[detailed]);
 
-    return (
-        loading ? <LoadingScreen /> :
-        <>
+    return (loading ? <LoadingScreen /> :
+        <div>
             <TableContainer sx={{zIndex:-1}} className="standingsTableBack">
                 <Table component={Paper} className='standingsTable' aria-label="customized table">
                     <ResultsHead 
@@ -52,8 +45,7 @@ const ResultsTable = (props:ResultsTableProps) => {
                     </TableBody>
                 </Table>
             </TableContainer>
-        </>
-    )
+        </div>)
 };
 
 export default ResultsTable;
