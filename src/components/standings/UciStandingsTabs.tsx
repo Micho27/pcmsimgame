@@ -6,7 +6,7 @@ import { useState } from 'react';
 import RiderStandingsTable from './riderStandings/RiderStandingsTable';
 import NationStandingsTable from './nationsStandings/NationStandingsTable';
 import { StandingsTabPanel } from '../StandingsTabPanel';
-import { lastRace } from '../../commonTypes';
+import { lastRaceStandings } from '../../commonTypes';
 
 const UciStandingsTabs = () => {
     const [value, setValue] = useState(0);
@@ -18,7 +18,7 @@ const UciStandingsTabs = () => {
     return (
         <Box sx={{ width: '100%', color: 'black' }} >
             <p>
-                Last Race Calculated: {lastRace}
+                Last Race Calculated: {lastRaceStandings}
             </p>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
               <Tabs value={value} 
