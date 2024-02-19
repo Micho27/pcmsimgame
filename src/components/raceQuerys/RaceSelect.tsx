@@ -27,7 +27,7 @@ const RaceSelect = (props:RaceSelectProps) => {
     };
 
     const fetchRaces = async () => {
-        const raceSheets:Array<GoogleSpreadsheetRow>=(await getRaceMetaData()).slice(0,22);
+        const raceSheets:Array<GoogleSpreadsheetRow>=(await getRaceMetaData()).slice(0,31);
 
         setRaces([...raceSheets])
     };
