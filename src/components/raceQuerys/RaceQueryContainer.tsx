@@ -3,7 +3,7 @@ import RaceSelect from "./RaceSelect";
 import StageSelect from "./StageSelect";
 import { GoogleSpreadsheetRow } from "google-spreadsheet";
 import ResultsTabs from "./resultsTabs/ResultsTabs";
-import { lastRace } from "../../commonTypes";
+import { lastRaceStandings } from "../../commonTypes";
 
 const RaceQueryContainer = () => {
     const [raceRow,setRaceRow]=useState<GoogleSpreadsheetRow | undefined>(undefined);
@@ -19,7 +19,7 @@ const RaceQueryContainer = () => {
         <div style={{color:"black"}}>
             <p> 
                 A place to query any results that have been added to the standings database.
-                Last Race Calculated: {lastRace}
+                Last Race Calculated: {lastRaceStandings}
             </p>
             <RaceSelect setRaceRow={setRaceRow}/>
             { raceRow ? <StageSelect numStages={numStages} setStage={setStage}/> : <></> }
