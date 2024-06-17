@@ -23,8 +23,9 @@ const RiderStandingsTable = () => {
         setLoading(true)
 
         const res: Array<GoogleSpreadsheetRow> = await getRiderStandings();
-
+        console.log(res);
         setriderStandingsData([...res])
+        
         setLoading(false)
     };
 
@@ -33,7 +34,7 @@ const RiderStandingsTable = () => {
     }, [])
 
     const sortedStandings = useMemo(
-        () => stableSort(riderStandingsData, order, orderBy,filter),
+        () => stableSort(riderStandingsData, order, orderBy,filter,'riderTeam'),
         [order, loading, filter],
     );
     
