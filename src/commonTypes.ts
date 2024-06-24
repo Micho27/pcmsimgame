@@ -20,8 +20,8 @@ export interface ResultsTableObject {
 
 export type Order = 'asc' | 'desc';
 export type TeamLevels = 'All' | 'wt' | 'pt' | 'ct';
-export const lastRaceStandings = 'La Vuelta Espana';
-export const lastRaceRaceDays = 'Strade Bianche'
+export const lastRaceStandings = 'Sparkassen Münsterland Giro';
+export const lastRaceRaceDays = 'CRO Race'
 
 //bare bones manual assigning of level to each team.
 //in future will replace with a query to the race days sheets and store in redux

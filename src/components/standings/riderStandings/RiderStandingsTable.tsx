@@ -40,10 +40,10 @@ const RiderStandingsTable = () => {
     
     return (
         loading ? <LoadingScreen /> :
-        <>
+        <div className="tableBack">
             <LevelFilter setFilter={setFilter} />
-            <TableContainer sx={{zIndex:-1}} className="standingsTableBack">
-                <Table component={Paper} className='standingsTable' aria-label="customized table">
+            <TableContainer sx={{zIndex:-1}}>
+                <Table component={Paper} aria-label="customized table">
                     <StandingsHead
                         order={order}
                         orderBy={orderBy}
@@ -55,7 +55,7 @@ const RiderStandingsTable = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
-        </>
+        </div>
     )
 };
 
