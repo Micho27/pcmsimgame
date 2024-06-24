@@ -16,7 +16,7 @@ const UciStandingsTabs = () => {
     };
     
     return (
-        <Box sx={{ width: '100%', color: 'black' }} >
+        <Box className="tabsOverallStyling" >
             <p>
                 Last Race Calculated: {lastRaceStandings}
             </p>

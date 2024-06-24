@@ -46,20 +46,22 @@ const RaceDaysTable = (props:RaceDaysTableProps) => {
         
     return (
         loading ? <LoadingScreen /> :
-        <TableContainer className="standingsTableBack">
-            <Table component={Paper} className='standingsTable' aria-label="customized table">
-                <RaceDaysHead
-                />
-                <TableBody>
-                    {raceDaysData.map((row,index) =>
-                        (<StyledTableRow key={row.get('riderName')} >
-                            <TableCell>{row.get('teamName')}</TableCell>
-                            <TableCell>{row.get('riderName')}</TableCell>
-                            <TableCell>{row.get('raceDays')}</TableCell>
-                        </StyledTableRow>))}
-                </TableBody>
-            </Table>
-        </TableContainer>
+        <div className="tableBack">
+            <TableContainer className="tableBack">
+                <Table component={Paper} aria-label="customized table">
+                    <RaceDaysHead
+                    />
+                    <TableBody>
+                        {raceDaysData.map((row,index) =>
+                            (<StyledTableRow key={row.get('riderName')} >
+                                <TableCell>{row.get('teamName')}</TableCell>
+                                <TableCell>{row.get('riderName')}</TableCell>
+                                <TableCell>{row.get('raceDays')}</TableCell>
+                            </StyledTableRow>))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </div>
     )
 };
 

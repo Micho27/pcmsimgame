@@ -70,10 +70,10 @@ const TeamStandingsTable = () => {
     
     return (
         loading ? <LoadingScreen /> :
-        <>
+        <div className="tableBack">
             <LevelFilter setFilter={setFilter} />
-            <TableContainer className="UcistandingsTableBack">
-                <Table component={Paper} className='UcistandingsTable' aria-label="customized table">
+            <TableContainer>
+                <Table component={Paper} aria-label="customized table">
                     <StandingsHead
                         order={order}
                         orderBy={orderBy}
@@ -136,7 +136,7 @@ const TeamStandingsTable = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
-        </> 
+        </div> 
     )
 };
 

@@ -49,19 +49,21 @@ const NationStandingsTable = () => {
 
     return (
         loading ? <LoadingScreen /> :
-        <TableContainer className="standingsTableBack">
-            <Table component={Paper} className='standingsTable' aria-label="customized table">
-                <NationsHead />
-                <TableBody>
-                    {sortedStandings.map((row) =>
-                        (<StyledTableRow key={row.get('nationName')} >
-                            <TableCell>{row.get('nationRank')}</TableCell>
-                            <TableCell>{row.get('nationName')}</TableCell>
-                            <TableCell>{row.get('nationPoints')}</TableCell>
-                        </StyledTableRow>))}
-                </TableBody>
-            </Table>
-        </TableContainer>
+        <div className="tableBack">
+            <TableContainer>
+                <Table component={Paper} aria-label="customized table">
+                    <NationsHead />
+                    <TableBody>
+                        {sortedStandings.map((row) =>
+                            (<StyledTableRow key={row.get('nationName')} >
+                                <TableCell>{row.get('nationRank')}</TableCell>
+                                <TableCell>{row.get('nationName')}</TableCell>
+                                <TableCell>{row.get('nationPoints')}</TableCell>
+                            </StyledTableRow>))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </div>
     )
 };
 
