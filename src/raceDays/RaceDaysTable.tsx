@@ -6,10 +6,10 @@ import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
-import { getRaceDays } from '../../services/dbActions';
+import { getRaceDays } from '../services/dbActions';
 import { GoogleSpreadsheetRow } from "google-spreadsheet";
 import RaceDaysHead from "./RaceDaysHead";
-import LoadingScreen from "../LoadingScreen";
+import LoadingScreen from "../components/LoadingScreen";
 
 interface RaceDaysTableProps {
     level:string;
