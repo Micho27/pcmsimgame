@@ -23,7 +23,7 @@ const RiderStandingsTable = () => {
         setLoading(true)
 
         const res: Array<GoogleSpreadsheetRow> = await getRiderStandings();
-        console.log(res);
+
         setriderStandingsData([...res])
         
         setLoading(false)

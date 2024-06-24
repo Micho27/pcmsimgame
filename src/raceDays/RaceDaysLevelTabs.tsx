@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import RaceDaysTable from './RaceDaysTable';
 import { useState } from 'react';
 import Typography from '@mui/material/Typography';
-import { TabPanelProps, lastRaceRaceDays } from '../../commonTypes';
+import { TabPanelProps, lastRaceRaceDays } from '../commonTypes';
 
 const  RaceDaysTabPanel = (props: TabPanelProps) => {
     const { children, value, index, ...other } = props;

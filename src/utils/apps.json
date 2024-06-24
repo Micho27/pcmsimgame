@@ -1,0 +1,12 @@
+[
+    {
+        "applicationID": "UCIStandings",
+        "name": "UCI Standings Table",
+        "applicationUrl": "standings"
+    },
+    {
+        "applicationID": "RaceDays",
+        "name": "Race Days Table",
+        "applicationUrl": "racedays"
+    }
+]
