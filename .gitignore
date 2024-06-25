@@ -5,6 +5,9 @@
 /.pnp
 .pnp.js
 
+# Excel files in scripts folder
+*.xlsx
+
 # testing
 /coverage
 
